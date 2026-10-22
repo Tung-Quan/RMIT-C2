@@ -4,17 +4,34 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "node scripts/dev.mjs",
+    "build": "vite build",
+    "dev:web": "vite",
+    "dev:api": "node --watch server/index.js",
+    "start": "node scripts/start.mjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs",
+    "tide:setup": "node scripts/tide-setup.mjs",
+    "users:link": "node scripts/link-identity.mjs",
+    "verify": "node scripts/verify-tide.mjs",
+    "tide:invite": "node scripts/tide-invite.mjs",
+    "format": "prettier --write src server shared scripts tests db compose.yaml vite.config.js README.md .env.example --ignore-unknown"
   },
   "dependencies": {
+    "@tidecloak/js": "0.14.41",
     "@tidecloak/react": "^0.14.33",
-    "@tideorg/mcp": "^1.9.33",
+    "dotenv": "17.4.2",
+    "express": "5.3.0",
+    "jose": "6.2.13",
+    "pg": "8.23.1",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "zod": "4.6.7"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.11",
+    "@tideorg/mcp": "^1.9.33",
     "@vitejs/plugin-react": "^4.7.0",
+    "prettier": "3.9.10",
     "vite": "^6.3.5"
   }
 }
