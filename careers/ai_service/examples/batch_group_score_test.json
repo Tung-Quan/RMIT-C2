@@ -1,0 +1,53 @@
+{
+  "job_text": "Backend Intern role requiring Python, FastAPI, REST APIs, SQL databases, Git, Docker, and AWS S3 familiarity.",
+  "candidates": [
+    {
+      "candidate_id": "excellent_backend_candidate",
+      "candidate_name": "Excellent Backend Candidate",
+      "cv_groups": {
+        "candidate_overview": "Computer science student focused on backend web development and cloud-ready education systems.",
+        "capability_evidence": "Python, FastAPI, REST API design, PostgreSQL, MySQL, Git, Docker, authentication, file upload, and AWS S3 basics.",
+        "work_or_project_evidence": "Built an LMS backend using FastAPI with authentication, exam management, document upload, OCR workflow integration, relational database schema design, Docker-based local testing, and S3-style storage abstraction.",
+        "education_training": "Undergraduate student in software engineering.",
+        "additional_signals": "Learning AWS fundamentals and backend deployment practices.",
+        "unknown_or_general": "No formal company experience yet, but has multiple backend-heavy personal and school projects."
+      }
+    },
+    {
+      "candidate_id": "keyword_stuffing_candidate",
+      "candidate_name": "Keyword Stuffing Candidate",
+      "cv_groups": {
+        "candidate_overview": "Student profile lists many backend keywords but provides no implementation evidence.",
+        "capability_evidence": "Python, FastAPI, REST API, SQL, Git, Docker, AWS S3, backend, database, authentication, deployment.",
+        "work_or_project_evidence": "No projects, no work experience, no implementation details, and no evidence of using these technologies.",
+        "education_training": "General undergraduate coursework.",
+        "additional_signals": "Interested in backend development.",
+        "unknown_or_general": "No concrete backend project or applied engineering evidence mentioned."
+      }
+    },
+    {
+      "candidate_id": "node_backend_candidate",
+      "candidate_name": "Node Backend Candidate",
+      "cv_groups": {
+        "candidate_overview": "Student built backend services using JavaScript and Node.js.",
+        "capability_evidence": "Node.js, Express, PostgreSQL, REST API design, authentication, Git, Docker, and relational database design.",
+        "work_or_project_evidence": "Built backend APIs with Express and PostgreSQL, including authentication, file upload, CRUD workflows, and Docker-based local development.",
+        "education_training": "Undergraduate student in computer science.",
+        "additional_signals": "Understands REST concepts and backend deployment basics.",
+        "unknown_or_general": "Has not used Python or FastAPI in the evidence provided."
+      }
+    },
+    {
+      "candidate_id": "marketing_candidate",
+      "candidate_name": "Marketing Candidate",
+      "cv_groups": {
+        "candidate_overview": "Marketing student interested in brand communication.",
+        "capability_evidence": "Social media planning, content writing, customer interviews, event support.",
+        "work_or_project_evidence": "Created marketing campaign plans and designed survey forms for customer research.",
+        "education_training": "Undergraduate student in business administration.",
+        "additional_signals": "Good communication and teamwork.",
+        "unknown_or_general": "No programming or backend development experience mentioned."
+      }
+    }
+  ]
+}

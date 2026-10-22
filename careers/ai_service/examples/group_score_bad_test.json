@@ -1,0 +1,11 @@
+{
+  "job_text": "Backend Intern role requiring Python, FastAPI, REST APIs, SQL databases, Git, Docker, and AWS S3 familiarity.",
+  "cv_groups": {
+    "candidate_overview": "Marketing student interested in brand communication.",
+    "capability_evidence": "Social media planning, content writing, customer interviews, event support.",
+    "work_or_project_evidence": "Created marketing campaign plans and designed survey forms for customer research.",
+    "education_training": "Undergraduate student in business administration.",
+    "additional_signals": "Good communication and teamwork.",
+    "unknown_or_general": "No programming or backend development experience mentioned."
+  }
+}

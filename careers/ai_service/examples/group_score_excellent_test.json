@@ -1,0 +1,11 @@
+{
+  "job_text": "Backend Intern role requiring Python, FastAPI, REST APIs, SQL databases, Git, Docker, and AWS S3 familiarity.",
+  "cv_groups": {
+    "candidate_overview": "Computer science student focused on backend web development and cloud-ready education systems.",
+    "capability_evidence": "Python, FastAPI, REST API design, PostgreSQL, MySQL, Git, Docker, authentication, file upload, and AWS S3 basics.",
+    "work_or_project_evidence": "Built an LMS backend using FastAPI with authentication, exam management, document upload, OCR workflow integration, relational database schema design, Docker-based local testing, and S3-style storage abstraction.",
+    "education_training": "Undergraduate student in software engineering.",
+    "additional_signals": "Learning AWS fundamentals and backend deployment practices.",
+    "unknown_or_general": "No formal company experience yet, but has multiple backend-heavy personal and school projects."
+  }
+}

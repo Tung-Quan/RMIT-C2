@@ -1,0 +1,19 @@
+{
+  "pairs": [
+    {
+      "pair_id": "excellent_backend_cv",
+      "query": "Backend Intern role requiring Python, FastAPI, REST APIs, SQL databases, Git, Docker, and AWS S3 familiarity.",
+      "document": "Computer science student with hands-on backend projects using Python and FastAPI. Built REST APIs with authentication, file upload, relational database design using PostgreSQL and MySQL, Docker deployment, Git workflow, and AWS S3 object storage integration. Implemented an LMS backend and document processing workflow."
+    },
+    {
+      "pair_id": "partial_web_cv",
+      "query": "Backend Intern role requiring Python, FastAPI, REST APIs, SQL databases, Git, Docker, and AWS S3 familiarity.",
+      "document": "Student built web applications using JavaScript and basic database features. Has used Git and created simple CRUD functions. Limited exposure to Python, FastAPI, Docker, and AWS S3."
+    },
+    {
+      "pair_id": "bad_marketing_cv",
+      "query": "Backend Intern role requiring Python, FastAPI, REST APIs, SQL databases, Git, Docker, and AWS S3 familiarity.",
+      "document": "Marketing student experienced in social media campaigns, brand communication, customer surveys, content planning, and event promotion."
+    }
+  ]
+}
