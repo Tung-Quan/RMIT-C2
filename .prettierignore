@@ -1,0 +1,5 @@
+# Vendor relay content is integrity checked by the Tide enclave.
+public/tide_dpop_auth.html
+public/tidecloak.json
+.local/
+.playwright-mcp/

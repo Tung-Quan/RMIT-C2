@@ -1,0 +1,2 @@
+# The Tide enclave checks these bytes; preserve them across Windows checkouts.
+public/tide_dpop_auth.html -text
