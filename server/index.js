@@ -10,7 +10,16 @@ const app = createApp({
   db,
   adapter,
   appOrigin: process.env.APP_ORIGIN,
+  allowedOrigins: (process.env.CORS_ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
   serveUi: process.env.NODE_ENV === "production",
+  careers: {
+    apiUrl: process.env.FAIRENROL_CAREERS_API_URL,
+    chatUrl: process.env.FAIRENROL_CAREERS_CHAT_URL,
+    secret: process.env.FAIRENROL_GATEWAY_SECRET,
+  },
 });
 const server = app.listen(
   Number(process.env.API_PORT || 3001),
@@ -24,6 +33,10 @@ const server = app.listen(
     );
   },
 );
+server.on("upgrade", (req, socket, head) => {
+  if (!req.url?.startsWith("/careers-socket.io/") || !app.locals.careersSocketProxy) return socket.destroy();
+  app.locals.careersSocketProxy.ws(req, socket, head, {}, () => socket.destroy());
+});
 const cleanup = setInterval(
   () =>
     db

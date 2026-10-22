@@ -6,6 +6,8 @@ import { AppError } from "./errors.js";
 import { tideAuthenticator } from "./auth/tide.js";
 import * as service from "./services.js";
 import { dpopRelay } from "../shared/dpop-relay.js";
+import { careersGateway } from "./careers-gateway.js";
+import httpProxy from "http-proxy-3";
 
 const id = z.string().min(1).max(100);
 const reasons = {
@@ -37,15 +39,59 @@ export function createApp({
   db,
   adapter,
   appOrigin = "http://localhost:5137",
+  allowedOrigins = [],
   serveUi = false,
+  careers,
 }) {
   const app = express();
+  if (careers?.chatUrl) {
+    const socketProxy = httpProxy.createProxyServer({ target: careers.chatUrl, changeOrigin: true });
+    app.locals.careersSocketProxy = socketProxy;
+    app.use("/careers-socket.io", (req, res) => {
+      req.url = req.originalUrl;
+      socketProxy.web(req, res, {}, () => {
+        if (!res.headersSent) res.status(502).json({ error: { code: "CHAT_UNAVAILABLE", message: "Chat service is unavailable." } });
+      });
+    });
+  }
   app.disable("x-powered-by");
+  const corsOrigins = new Set([
+    new URL(appOrigin).origin,
+    "http://localhost:5137",
+    "https://localhost",
+    "capacitor://localhost",
+    ...allowedOrigins,
+  ]);
+  app.use((req, res, next) => {
+    const origin = req.get("origin");
+    if (origin && corsOrigins.has(origin)) {
+      res.set("Access-Control-Allow-Origin", origin);
+      res.set("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,OPTIONS");
+      res.set(
+        "Access-Control-Allow-Headers",
+        "Accept, Authorization, Content-Type, DPoP, Idempotency-Key, X-Requested-With",
+      );
+      res.set("Access-Control-Expose-Headers", "DPoP-Nonce, WWW-Authenticate");
+      res.vary("Origin");
+    }
+    if (req.method === "OPTIONS")
+      return origin && corsOrigins.has(origin)
+        ? res.sendStatus(204)
+        : res.sendStatus(403);
+    next();
+  });
   app.use((req, res, next) => {
     res.set("X-Content-Type-Options", "nosniff");
     if (req.path.startsWith("/api")) res.set("Cache-Control", "no-store");
     next();
   });
+  const authenticate = tideAuthenticator({ adapter, db, appOrigin });
+  const requireSession = async (req, res, next) => {
+    req.tide = await authenticate(req);
+    req.user = await service.currentUser(db, req.tide);
+    next();
+  };
+  app.use("/api/careers", requireSession, express.raw({ type: () => true, limit: "26mb" }), careersGateway(careers));
   app.use(express.json({ limit: "12kb" }));
   app.get("/api/health", async (req, res) => {
     await db.query("SELECT 1");
@@ -57,11 +103,7 @@ export function createApp({
   app.get("/api/public/exceptions", async (req, res) =>
     res.json(await service.publicExceptions(db)),
   );
-  const authenticate = tideAuthenticator({ adapter, db, appOrigin });
-  app.use("/api", async (req, res, next) => {
-    req.user = await service.currentUser(db, await authenticate(req));
-    next();
-  });
+  app.use("/api", requireSession);
   app.get("/api/me", (req, res) => res.json(req.user));
   app.get("/api/state", async (req, res) =>
     res.json(await service.snapshot(db, req.user)),
@@ -131,6 +173,13 @@ export function createApp({
     }),
   );
   if (serveUi && existsSync("dist/index.html")) {
+    if (existsSync("careers/frontend/dist/index.html")) {
+      app.use("/careers", express.static(resolve("careers/frontend/dist"), { index: false }));
+      app.get(["/careers", "/careers/{*path}"], (req, res, next) => {
+        if (req.path.includes(".")) return next();
+        res.sendFile(resolve("careers/frontend/dist/index.html"));
+      });
+    }
     app.use(express.static(resolve("dist"), { index: false }));
     app.get("/{*path}", (req, res, next) => {
       // Missing JSON/assets must not masquerade as index.html.
