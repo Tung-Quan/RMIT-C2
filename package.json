@@ -14,13 +14,27 @@
     "users:link": "node scripts/link-identity.mjs",
     "verify": "node scripts/verify-tide.mjs",
     "tide:invite": "node scripts/tide-invite.mjs",
-    "format": "prettier --write src server shared scripts tests db compose.yaml vite.config.js README.md .env.example --ignore-unknown"
+    "format": "prettier --write src server shared scripts tests db compose.yaml vite.config.js README.md .env.example --ignore-unknown",
+    "careers:install": "npm --prefix careers/frontend ci",
+    "careers:test": "npm --prefix careers/frontend test",
+    "ai:up": "docker compose --profile fairenrol-ai up -d --build fairenrol-ai",
+    "build:all": "npm run build && npm --prefix careers/frontend run build",
+    "build:mobile": "node scripts/build-mobile.mjs",
+    "cap:sync": "npm run build:mobile && npx cap sync",
+    "cap:open:android": "npx cap open android",
+    "cap:run:android": "npm run cap:sync && npx cap run android",
+    "cap:open:ios": "npx cap open ios",
+    "cap:run:ios": "npm run cap:sync && npx cap run ios"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/ios": "^8.5.3",
     "@tidecloak/js": "0.14.41",
     "@tidecloak/react": "^0.14.33",
     "dotenv": "17.4.2",
     "express": "5.3.0",
+    "http-proxy-3": "^2.0.1",
     "jose": "6.2.13",
     "pg": "8.23.1",
     "react": "^19.1.0",
@@ -28,10 +42,12 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
     "@electric-sql/pglite": "0.5.11",
     "@tideorg/mcp": "^1.9.33",
     "@vitejs/plugin-react": "^4.7.0",
     "prettier": "3.9.10",
+    "typescript": "^5.9.3",
     "vite": "^6.3.5"
   }
 }
