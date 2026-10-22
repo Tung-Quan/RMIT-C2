@@ -42,7 +42,7 @@ The first run prints an invitation for `registrar-1`. Open it yourself and compl
 npm.cmd run dev
 ```
 
-Open [FairEnrol](http://localhost:5137/) and sign in with the Tide account linked to the registrar. The frontend runs on **5137**, the API on **3001**, PostgreSQL on **54329**, and TideCloak on **8080**. Docker services and the API bind to loopback. Use `localhost:5137` consistently because the DPoP proof must match the configured `APP_ORIGIN`.
+`dev` starts the FairEnrol API and both Vite frontends. Open [FairEnrol](http://localhost:5137/) and the [Careers workspace](http://localhost:5137/careers/), then sign in with the Tide account linked to the registrar. PostgreSQL is available on **54329**, and TideCloak stays on **8080**. Use `localhost:5137` consistently because the DPoP proof must match the configured `APP_ORIGIN`.
 
 The initial registrar's display name is the fictional seeded profile **Taylor Reed**. The setup maps the owner's linked Tide identity to that development profile. Seeded names are demonstration data, not a university directory.
 
@@ -106,6 +106,21 @@ bash node_modules/@tideorg/mcp/templates/shared/tide-doctor.sh --app . --check
 Install `jq` for live `--url`/`--realm` checks so doctor can read the real adapter. Without it, this version can probe dummy issuer/client values and receive an expected 403. Keep issuer/client validation in place. The latest complete run returned 15 passes, zero failures and one pending-CR warning.
 
 The earlier presentation checks used explicit identity/state fixtures. Separately, real Tide registrar login, authenticated API data and browser reload after a normal-container restart have now been verified. Real student/reviewer acceptance remains pending separate linking and governed mapping repairs. See `docs/IMPLEMENTATION_STATUS.md`.
+
+## FairEnrol Careers and Capacitor
+
+The candidate and hiring workflows are part of FairEnrol at [`/careers/`](http://localhost:5137/careers/). Tide remains the single human sign-in provider. FairEnrol verifies the Tide token, DPoP proof, replay state and active-person mapping before it sends a short-lived signed assertion to the private careers API or chat service.
+
+The Android and iOS wrappers package both React apps and keep the existing backend separate. `npm.cmd run build:mobile` stages the Careers build under `dist/careers/`; `npm.cmd run cap:sync` copies it into the native projects. See the [Capacitor setup and Android/iOS test/build steps](docs/CAPACITOR.md). Windows can build and test Android; iOS builds require macOS and Xcode.
+
+Useful checks:
+
+```powershell
+npm.cmd test
+npm.cmd run build:all
+npm.cmd run careers:test
+npm --prefix careers/chat-service run test:ci
+```
 
 ## Source map
 
