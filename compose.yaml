@@ -15,6 +15,7 @@ services:
       interval: 3s
       timeout: 3s
       retries: 20
+
   tidecloak-volume-init:
     image: tideorg/tidecloak-dev:latest
     user: "0"
@@ -38,6 +39,39 @@ services:
       - "127.0.0.1:8080:8080"
     volumes:
       - tidecloak-data:/opt/keycloak/data/h2
+
+  fairenrol-ai:
+    profiles: [fairenrol-ai]
+    build:
+      context: .
+      dockerfile: careers/Dockerfile.ai-service
+      args:
+        AI_BASE_IMAGE: ${FAIRENROL_AI_BASE_IMAGE:-pytorch/pytorch:2.11.0-cuda12.8-cudnn9-runtime}
+    gpus: all
+    environment:
+      AI_SERVICE_API_KEY: ${FAIRENROL_AI_KEY:-}
+      QWEN_RERANKER_MODEL_PATH: /app/models/qwen3-reranker-0.6b
+      JOB_PARSER_MODEL: /app/models/qwen3-4b-instruct
+      JOB_PARSER_DEVICE: cuda
+      JOB_PARSER_LOAD_IN_4BIT: "true"
+      JOB_PARSER_MAX_NEW_TOKENS: "2048"
+      JOB_PARSER_MAX_CONCURRENCY: "1"
+      QWEN_RERANKER_DEVICE: cuda
+      QWEN_BATCH_PAIR_SIZE: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      OMP_NUM_THREADS: "4"
+      HF_HUB_OFFLINE: "1"
+    ports:
+      - "8010:8010"
+    volumes:
+      - "${FAIRENROL_MODELS_PATH:-./careers/models}:/app/models:ro"
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8010/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
 volumes:
   postgres-data:
   tidecloak-data:
