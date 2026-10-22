@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">FairEnrol</string>
+    <string name="title_activity_main">FairEnrol</string>
+    <string name="package_name">com.fairenrol.app</string>
+    <string name="custom_url_scheme">com.fairenrol.app</string>
+</resources>
