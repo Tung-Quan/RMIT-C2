@@ -1,388 +1,754 @@
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTideCloak } from "@tidecloak/react";
-import seed from "./seed.json";
+import { createApi } from "./api/client.js";
 
-const initialPanel = [
-  { id: "approver-1", name: "Dr. Amara Okafor", title: "Head of School" },
-  { id: "approver-2", name: "Sam Williams", title: "Academic Advisor" },
-  { id: "approver-3", name: "Alex Morgan", title: "Student Representative" },
-];
-
-const demoRegistrar = { id: "registrar-1", name: "Taylor Reed", title: "Registrar" };
 const actionNames = {
   force: "Force enrol",
-  jump: "Jump the queue",
+  jump: "Move to front of queue",
   remove: "Remove a student",
   panel: "Change approver panel",
 };
-
-function audit(state, actor, action, reason) {
-  return {
-    ...state,
-    audit: [{
-      id: `${Date.now()}-${Math.random()}`,
-      time: new Date().toISOString(),
-      actor,
-      action,
-      reason,
-    }, ...state.audit],
-  };
+function Brand() {
+  return (
+    <a className="brand" href="/">
+      <span className="brand-mark">F</span> FairEnrol
+    </a>
+  );
 }
-
-function applyApprovedAction(state, request) {
-  if (request.kind === "panel") {
-    return {
-      ...state,
-      panel: [...state.panel.filter((member) => member.id !== request.replaceMember.id), request.candidate],
-    };
-  }
-
-  const courses = state.courses.map((course) => {
-    if (course.id !== request.courseId) return course;
-    const enrolled = course.enrolled.filter((id) => id !== request.studentId);
-    const waitlist = course.waitlist.filter((id) => id !== request.studentId);
-    if (request.kind === "force") {
-      return { ...course, enrolled: [...enrolled, request.studentId], waitlist };
-    }
-    if (request.kind === "jump") {
-      return { ...course, enrolled, waitlist: [request.studentId, ...waitlist] };
-    }
-    return { ...course, enrolled, waitlist };
-  });
-  return { ...state, courses };
+function Footer() {
+  return (
+    <footer>
+      <span>FairEnrol · A fair place in every queue.</span>
+      <span>Identity by TideCloak · Enrolment rules enforced by FairEnrol</span>
+    </footer>
+  );
 }
-
-function reducer(state, event) {
-  if (event.type === "enrol") {
-    const course = state.courses.find((item) => item.id === event.courseId);
-    if (course.enrolled.includes(event.studentId) || course.waitlist.includes(event.studentId)) return state;
-    const hasSeat = course.enrolled.length < course.capacity;
-    const courses = state.courses.map((item) => item.id !== course.id ? item : hasSeat
-      ? { ...item, enrolled: [...item.enrolled, event.studentId] }
-      : { ...item, waitlist: [...item.waitlist, event.studentId] });
-    return audit({ ...state, courses }, event.actor, hasSeat ? "Enrolment recorded" : "Joined waitlist",
-      hasSeat ? `${event.studentName} enrolled in ${course.code}.` : `${event.studentName} joined ${course.code}'s waitlist in FIFO order.`);
-  }
-  if (event.type === "capacity") {
-    const courses = state.courses.map((course) => course.id === event.courseId
-      ? { ...course, capacity: Math.max(1, Number(event.capacity) || 1) }
-      : course);
-    const course = state.courses.find((item) => item.id === event.courseId);
-    return audit({ ...state, courses }, event.actor, "Seat limit updated",
-      `${course.code} seat limit set to ${event.capacity}.`);
-  }
-  if (event.type === "blocked") {
-    return audit(state, event.actor, "Blocked registrar override attempt", event.reason);
-  }
-  if (event.type === "request") {
-    const request = { ...event.request, approvals: [], status: "pending", id: `${Date.now()}-${Math.random()}` };
-    return audit({ ...state, requests: [request, ...state.requests] }, request.requester,
-      `${actionNames[request.kind]} requested`, request.reason);
-  }
-  if (event.type === "vote") {
-    const request = state.requests.find((item) => item.id === event.requestId);
-    if (!request || request.status !== "pending") return state;
-    if (request.requester === event.approver.name || !state.panel.some((member) => member.id === event.approver.id)
-      || request.approvals.some((member) => member.id === event.approver.id)) {
-      return audit(state, event.approver.name, "Approval blocked",
-        "Requester cannot approve their own request; panel members may vote only once.");
-    }
-    const approvals = [...request.approvals, event.approver];
-    let next = audit({
-      ...state,
-      requests: state.requests.map((item) => item.id === request.id ? { ...item, approvals } : item),
-    }, event.approver.name, "Exception approval recorded", `Approval ${approvals.length} of 2 for ${actionNames[request.kind].toLowerCase()}: ${request.reason}`);
-    if (approvals.length >= 2) {
-      const approvedRequest = { ...request, approvals };
-      next = applyApprovedAction(next, approvedRequest);
-      next = {
-        ...next,
-        requests: next.requests.map((item) => item.id === request.id ? { ...item, approvals, status: "approved" } : item),
-      };
-      next = audit(next, "FairEnrol demo", "Exception approved and applied",
-        `${actionNames[request.kind]} approved by ${approvals.map((member) => member.name).join(" and ")}. Public reason: ${request.reason}`);
-    }
-    return next;
-  }
-  if (event.type === "deny") {
-    const request = state.requests.find((item) => item.id === event.requestId);
-    if (!request || request.status !== "pending") return state;
-    return audit({
-      ...state,
-      requests: state.requests.map((item) => item.id === request.id ? { ...item, status: "denied" } : item),
-    }, event.actor, "Exception denied", `${event.reason} Request reason: ${request.reason}`);
-  }
-  return state;
+function Avatar({ person, index = 0 }) {
+  return (
+    <span title={person.name} className={`avatar a${index % 3}`}>
+      {person.name
+        .split(" ")
+        .map((p) => p[0])
+        .slice(-2)
+        .join("")}
+    </span>
+  );
 }
-
-function personName(state, id) {
-  return state.students.find((student) => student.id === id)?.name ?? id;
+function Hero({ panel = [] }) {
+  return (
+    <section className="hero">
+      <div>
+        <div className="eyebrow">
+          <span /> COURSE REGISTRATION, WITHOUT FAVOURS
+        </div>
+        <h1>
+          A fair place
+          <br />
+          in every queue.
+        </h1>
+        <p>
+          First come, first served. Exceptions need a clear reason and two
+          independent approvals.
+        </p>
+      </div>
+      <div className="hero-card">
+        <span className="card-kicker">COLLECTIVE REVIEW</span>
+        <strong>
+          Every exception.
+          <br />
+          Two independent voices.
+        </strong>
+        <div className="avatar-stack">
+          {panel.map((p, i) => (
+            <Avatar key={p.id} person={p} index={i} />
+          ))}
+        </div>
+        <small>Three panel members · two approvals required</small>
+      </div>
+    </section>
+  );
 }
-
-export default function App() {
-  const { authenticated, isInitializing, isLoading, initError, login, logout, hasRealmRole, getValueFromToken } = useTideCloak();
-  const [state, dispatch] = useReducer(reducer, {
-    courses: seed.courses,
-    students: seed.students,
-    panel: initialPanel,
-    requests: [],
-    audit: [],
-  });
-  const [role, setRole] = useState("student");
-  const [studentId, setStudentId] = useState(seed.students[0].id);
-  const [approverId, setApproverId] = useState(initialPanel[0].id);
-  const [selectedCourse, setSelectedCourse] = useState(seed.courses[0].id);
-  const [requestKind, setRequestKind] = useState("force");
-  const [targetStudent, setTargetStudent] = useState(seed.students[3].id);
-  const [reason, setReason] = useState("Accessibility accommodation requires a seat in this course.");
-  const [panelCandidate, setPanelCandidate] = useState(demoRegistrar.id);
-  const [panelRemoval, setPanelRemoval] = useState(initialPanel[2].id);
-  const [notice, setNotice] = useState("");
-
-  useEffect(() => {
-    if (location.pathname === "/auth/redirect" && !isInitializing) {
-      history.replaceState(null, "", "/");
-    }
-  }, [isInitializing]);
-
-  const activeApprover = state.panel.find((member) => member.id === approverId) ?? state.panel[0];
-  const actor = role === "registrar"
-    ? demoRegistrar
-    : role === "approver"
-      ? activeApprover
-      : state.students.find((student) => student.id === studentId);
-  const isAlreadyEnrolled = (course, id) => course.enrolled.includes(id);
-
-  const ownWaitlists = useMemo(() => state.courses
-    .map((course) => ({ course, position: course.waitlist.indexOf(studentId) + 1 }))
-    .filter((item) => item.position > 0), [state.courses, studentId]);
-
-  function submitRequest(event) {
-    event.preventDefault();
-    const base = {
-      kind: requestKind,
-      requester: actor.name,
-      reason: reason.trim(),
-    };
-    if (!base.reason) return;
-    if (requestKind === "panel") {
-      const candidate = panelCandidate === demoRegistrar.id
-        ? { id: demoRegistrar.id, name: demoRegistrar.name, title: demoRegistrar.title }
-        : state.students.find((student) => student.id === panelCandidate);
-      const replaceMember = state.panel.find((member) => member.id === panelRemoval);
-      if (!candidate || !replaceMember) return;
-      dispatch({ type: "request", request: { ...base, candidate, replaceMember } });
-    } else {
-      dispatch({ type: "request", request: { ...base, courseId: selectedCourse, studentId: targetStudent } });
-    }
-    setNotice("Request added to the public log. This demo's approval flow is simulated.");
-  }
-
-  function attemptRegistrarOverrides() {
-    dispatch({ type: "blocked", actor: demoRegistrar.name, reason: "Registrar cannot reorder a queue; positions change only through FIFO enrolment or a publicly reasoned, two-approval exception." });
-    dispatch({ type: "blocked", actor: demoRegistrar.name, reason: "Registrar cannot change the approver panel alone; a panel change needs two approver votes." });
-    setNotice("Both override attempts were blocked. The public log records each attempt.");
-  }
-
-  function joinCourse(course) {
-    dispatch({ type: "enrol", courseId: course.id, studentId, studentName: personName(state, studentId), actor: actor.name });
-    setNotice("Enrolment or FIFO waitlist position recorded in this demo.");
-  }
-
-  async function startLogin() {
-    try {
-      await login();
-    } catch (error) {
-      setNotice(`TideCloak login could not start: ${error instanceof Error ? error.message : String(error)}. Check that TideCloak is running at localhost:8080.`);
-    }
-  }
-
-  if (isInitializing) return <main className="loading">Connecting to TideCloak…</main>;
-
-  const tokenName = authenticated
-    ? getValueFromToken("name") || getValueFromToken("preferred_username")
-    : "";
-  const hasRegistrarRole = authenticated && (hasRealmRole("registrar") || hasRealmRole("admin"));
-  const hasApproverRole = authenticated && hasRealmRole("approver");
-
+function SectionTitle({ eyebrow, title, detail }) {
+  return (
+    <div className="section-heading">
+      <div>
+        <div className="eyebrow">{eyebrow}</div>
+        <h2>{title}</h2>
+      </div>
+      {detail && <span className="count-pill">{detail}</span>}
+    </div>
+  );
+}
+export function SetupScreen({ message, retry }) {
   return (
     <main className="shell">
       <header className="topbar">
-        <a className="brand" href="#"><span className="brand-mark">F</span> FairEnrol</a>
-        <div className="top-actions">
-          <span className={`auth-state ${authenticated ? "connected" : ""}`}>
-            <i /> {authenticated ? `TideCloak · ${tokenName || "signed in"}` : "TideCloak · not signed in"}
-          </span>
-          {authenticated
-            ? <button className="button quiet" onClick={logout}>Log out</button>
-            : <button className="button dark" onClick={startLogin} disabled={isLoading}>{isLoading ? "Starting login…" : "Log in with TideCloak"}</button>}
-        </div>
+        <Brand />
+        <span className="auth-state">Local development</span>
       </header>
-
-      <section className="hero">
-        <div>
-          <div className="eyebrow"><span /> COURSE REGISTRATION, WITHOUT FAVOURS</div>
-          <h1>A fair place<br />in every queue.</h1>
-          <p>First come, first served. Exceptions are public, reasoned, and require collective approval.</p>
-        </div>
-        <div className="hero-card">
-          <span className="card-kicker">THE PROMISE</span>
-          <strong>No single person<br />can move the line.</strong>
-          <div className="avatar-stack">{state.panel.map((member, index) => <span key={member.id} className={`avatar a${index}`}>{member.name.split(" ").map((part) => part[0]).slice(-2).join("")}</span>)}</div>
-          <small>Approver panel · 2 of 3 required</small>
-        </div>
+      <Hero />
+      <section className="welcome-card">
+        <div className="eyebrow">CONNECT YOUR CAMPUS</div>
+        <h2>Finish connecting TideCloak</h2>
+        <p>
+          {message ||
+            "The identity service is being configured. Course actions will be available after a secure sign-in."}
+        </p>
+        <ol>
+          <li>
+            Start the local services with <code>docker compose up -d</code>.
+          </li>
+          <li>
+            Run <code>npm run tide:setup</code> and complete the Tide
+            account-linking step.
+          </li>
+          <li>
+            Run <code>npm run dev</code> and return here.
+          </li>
+        </ol>
+        <button
+          className="button dark"
+          onClick={retry || (() => location.reload())}
+        >
+          Check connection again
+        </button>
       </section>
-
-      <div className="demo-warning">
-        <span>DEMO MODE</span>
-        TideCloak login is real when configured. The role switcher and 2-of-3 exception flow below are local simulations, not Tide-enforced authorization.
-      </div>
-      {initError && <div className="notice login-error" role="alert">
-        TideCloak initialization failed: {initError.message}. Check that the local TideCloak server is running at localhost:8080 and that the fairenrol realm/client is configured.
-      </div>}
-
-      <section className="toolbar">
-        <div>
-          <label htmlFor="role">VIEW AS</label>
-          <select id="role" value={role} onChange={(event) => setRole(event.target.value)}>
-            <option value="student">Student</option>
-            <option value="registrar">Registrar</option>
-            <option value="approver">Approver</option>
-          </select>
-          {role === "student" && <select aria-label="Demo student" value={studentId} onChange={(event) => setStudentId(event.target.value)}>
-            {state.students.map((student) => <option key={student.id} value={student.id}>{student.name}</option>)}
-          </select>}
-          {role === "approver" && <select aria-label="Demo approver" value={activeApprover?.id ?? ""} onChange={(event) => setApproverId(event.target.value)}>
-            {state.panel.map((member) => <option key={member.id} value={member.id}>{member.name} · {member.title}</option>)}
-          </select>}
-        </div>
-        <div className="role-hint">
-          {authenticated
-            ? `Tide roles: ${hasRegistrarRole ? "registrar " : ""}${hasApproverRole ? "approver" : ""}${!hasRegistrarRole && !hasApproverRole ? "student / no admin role" : ""}`
-            : "Sign in to view your TideCloak identity and realm roles."}
-        </div>
-      </section>
-
-      {notice && <div className="notice" role="status">{notice}<button aria-label="Dismiss notice" onClick={() => setNotice("")}>×</button></div>}
-
-      {role === "student" && (
-        <section className="section">
-          <div className="section-heading"><div><div className="eyebrow">STUDENT DASHBOARD</div><h2>Your courses</h2></div><span className="count-pill">{state.courses.length} open courses</span></div>
-          {ownWaitlists.length > 0 && <div className="position-card"><strong>Your waitlist positions</strong>{ownWaitlists.map(({ course, position }) => <span key={course.id}>{course.code} <b>#{position}</b></span>)}</div>}
-          <div className="course-grid">
-            {state.courses.map((course) => {
-              const already = isAlreadyEnrolled(course, studentId);
-              const position = course.waitlist.indexOf(studentId) + 1;
-              const available = Math.max(0, course.capacity - course.enrolled.length);
-              return <article className="course-card" key={course.id}>
-                <div className="course-top"><span className="course-code">{course.code}</span><span className={available ? "seats open" : "seats full"}>{available ? `${available} seats open` : "At capacity"}</span></div>
-                <h3>{course.name}</h3>
-                <div className="course-stats"><span>Enrolled <b>{course.enrolled.length}/{course.capacity}</b></span><span>Waiting <b>{course.waitlist.length}</b></span></div>
-                {position > 0
-                  ? <div className="queue-status">You’re #{position} in the waitlist <small>Order is first come, first served.</small></div>
-                  : already
-                    ? <div className="queue-status enrolled">You’re enrolled <small>Your place is confirmed.</small></div>
-                    : <button className="button dark full-width" onClick={() => joinCourse(course)}>{available ? "Enrol in course" : "Join waitlist"}</button>}
-              </article>;
-            })}
-          </div>
-          <div className="section-heading subheading"><div><div className="eyebrow">PUBLIC EXCEPTIONS</div><h2>Reasons that changed a queue</h2></div></div>
-          <div className="reason-list">
-            {state.requests.filter((request) => request.status === "approved").map((request) => <div className="reason-item" key={request.id}><span className="approved-tag">APPROVED</span><div><strong>{actionNames[request.kind]}</strong><p>{request.reason}</p></div></div>)}
-            {!state.requests.some((request) => request.status === "approved") && <p className="empty">No exceptions approved. The original queue remains unchanged.</p>}
-          </div>
-        </section>
-      )}
-
-      {role === "registrar" && (
-        <section className="section">
-          <div className="section-heading"><div><div className="eyebrow">REGISTRAR DASHBOARD</div><h2>Course administration</h2></div><span className="count-pill">Course limits only</span></div>
-          <div className="registrar-grid">
-            {state.courses.map((course) => <article className="course-card" key={course.id}><span className="course-code">{course.code}</span><h3>{course.name}</h3><CapacityEditor course={course} actor={demoRegistrar.name} dispatch={dispatch} /><div className="course-stats"><span>Enrolled <b>{course.enrolled.length}</b></span><span>Waitlist <b>{course.waitlist.length}</b></span></div></article>)}
-          </div>
-          <div className="blocked-card"><div><span className="blocked-icon">⛔</span><div><strong>Override attempt demo</strong><p>Try moving a friend to the front or adding yourself to the approver panel.</p></div></div><button className="button outline" onClick={attemptRegistrarOverrides}>Attempt both overrides</button></div>
-          <RequestForm {...{ state, selectedCourse, setSelectedCourse, requestKind, setRequestKind, targetStudent, setTargetStudent, reason, setReason, panelCandidate, setPanelCandidate, panelRemoval, setPanelRemoval, submitRequest }} registrar />
-        </section>
-      )}
-
-      {role === "approver" && (
-        <section className="section">
-          <div className="section-heading"><div><div className="eyebrow">APPROVER PANEL</div><h2>Review exception requests</h2></div><span className="count-pill">{state.panel.length} panel members</span></div>
-          <div className="panel-strip">{state.panel.map((member) => <div className="panel-person" key={member.id}><span className="avatar">{member.name.split(" ").map((part) => part[0]).slice(-2).join("")}</span><span><strong>{member.name}</strong><small>{member.title}</small></span></div>)}</div>
-          <RequestForm {...{ state, selectedCourse, setSelectedCourse, requestKind, setRequestKind, targetStudent, setTargetStudent, reason, setReason, panelCandidate, setPanelCandidate, panelRemoval, setPanelRemoval, submitRequest }} />
-          <div className="request-list">
-            {state.requests.map((request) => <article className="request-card" key={request.id}>
-              <div className="request-head"><div><span className="eyebrow">{actionNames[request.kind]}</span><h3>{request.kind === "panel" ? `Replace ${request.replaceMember.name} with ${request.candidate.name}` : `${request.kind === "force" ? "Enrol" : request.kind === "jump" ? "Move up" : "Remove"} ${personName(state, request.studentId)} · ${state.courses.find((course) => course.id === request.courseId)?.code}`}</h3></div><span className={`status-tag ${request.status}`}>{request.status}</span></div>
-              <p className="request-reason">“{request.reason}”</p>
-              <div className="vote-row"><span>{request.approvals.length} of 2 approvals</span><div className="vote-avatars">{request.approvals.map((member) => <span className="avatar mini" title={member.name} key={member.id}>{member.name.split(" ").map((part) => part[0]).slice(-2).join("")}</span>)}</div></div>
-              {request.status === "pending" && <div className="request-actions">
-                {request.requester === activeApprover?.name
-                  ? <span className="muted">Requester cannot approve their own request</span>
-                  : <button className="button approve" onClick={() => dispatch({ type: "vote", requestId: request.id, approver: activeApprover })} disabled={request.approvals.some((member) => member.id === activeApprover?.id)}>Approve as {activeApprover?.name}</button>}
-                <button className="button text-button" onClick={() => dispatch({ type: "deny", requestId: request.id, actor: activeApprover?.name, reason: "The panel declined this request." })}>Deny</button>
-              </div>}
-            </article>)}
-            {state.requests.length === 0 && <p className="empty">No open requests. Submit one above to begin the demo.</p>}
-          </div>
-        </section>
-      )}
-
-      <section className="section explainer">
-        <div className="section-heading"><div><div className="eyebrow">WHY GOVERNANCE MATTERS</div><h2>Ordinary roles vs. collective control</h2></div></div>
-        <div className="compare-grid">
-          <article className="compare-card ordinary"><span>ORDINARY LOGIN + BACKEND ROLES</span><h3>The registrar could</h3><ul><li>Change queue order with an admin API call</li><li>Force-enrol a friend without a public reason</li><li>Add themselves as the only approver</li></ul><p>One trusted backend role is a single point of power.</p></article>
-          <article className="compare-card tide"><span>TIDECLOAK + FAIR POLICY</span><h3>The demo blocks this</h3><ul><li>Queue position is assigned in FIFO order</li><li>Exceptions show their reason in the public log</li><li>Two different panel members must approve</li></ul><p>Real TideCloak login is wired; business-action quorum below is simulated and needs a Tide policy integration.</p></article>
-        </div>
-      </section>
-
-      <section className="section audit-section">
-        <div className="section-heading"><div><div className="eyebrow">TRANSPARENT BY DEFAULT</div><h2>Public audit log</h2></div><span className="count-pill">{state.audit.length} events</span></div>
-        <div className="audit-list">
-          {state.audit.map((entry) => <div className="audit-row" key={entry.id}><time>{new Date(entry.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</time><span className="audit-dot" /><div><strong>{entry.action}</strong><p>{entry.reason}</p></div><span className="audit-actor">{entry.actor}</span></div>)}
-          {state.audit.length === 0 && <p className="empty">Actions, approvals, denials and blocked attempts will appear here.</p>}
-        </div>
-      </section>
-
-      <footer><span>FairEnrol · Synthetic data only</span><span>Demo build · no university systems connected</span></footer>
+      <Footer />
     </main>
   );
 }
-
-function RequestForm(props) {
-  const { state, selectedCourse, setSelectedCourse, requestKind, setRequestKind, targetStudent, setTargetStudent, reason, setReason, panelCandidate, setPanelCandidate, panelRemoval, setPanelRemoval, submitRequest, registrar = false } = props;
-  const candidates = [...state.students.filter((student) => !state.panel.some((member) => member.id === student.id))
-    .slice(0, 5).map((student) => ({ ...student, title: "Student representative" })), demoRegistrar];
-
-  return <form className="request-form" onSubmit={submitRequest}>
-    <div className="form-title"><div><div className="eyebrow">{registrar ? "REQUEST AN EXCEPTION" : "NEW PROTECTED REQUEST"}</div><h3>Ask the panel to review</h3></div><span className="approval-badge">2 of 3 required</span></div>
-    <div className="form-grid">
-      <label>Action<select value={requestKind} onChange={(event) => setRequestKind(event.target.value)}>{Object.entries(actionNames).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
-      {requestKind !== "panel" && <>
-        <label>Course<select value={selectedCourse} onChange={(event) => setSelectedCourse(event.target.value)}>{state.courses.map((course) => <option key={course.id} value={course.id}>{course.code} · {course.name}</option>)}</select></label>
-        <label>Student<select value={targetStudent} onChange={(event) => setTargetStudent(event.target.value)}>{state.students.map((student) => <option key={student.id} value={student.id}>{student.name}</option>)}</select></label>
-      </>}
-      {requestKind === "panel" && <>
-        <label>Replace panel member<select value={panelRemoval} onChange={(event) => setPanelRemoval(event.target.value)}>{state.panel.map((member) => <option key={member.id} value={member.id}>{member.name}</option>)}</select></label>
-        <label>With new member<select value={panelCandidate} onChange={(event) => setPanelCandidate(event.target.value)}>{candidates.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.name}</option>)}</select></label>
-      </>}
-      <label className="reason-field">Public reason<textarea required value={reason} onChange={(event) => setReason(event.target.value)} maxLength={240} placeholder="State the reason; this will be public." /></label>
-    </div>
-    <div className="form-footer"><span>Requester cannot approve their own request.</span><button className="button dark" type="submit">Submit public request</button></div>
-  </form>;
+export default function App() {
+  const {
+    authenticated,
+    isInitializing,
+    isLoading,
+    initError,
+    login,
+    logout,
+    secureFetch,
+    reload,
+  } = useTideCloak();
+  // Standard frontchannel callbacks are processed by the provider's IAMService initialization.
+  // useAuthCallback is for hybrid mode and would race that token exchange here.
+  useEffect(() => {
+    if (
+      !isInitializing &&
+      authenticated &&
+      location.pathname === "/auth/redirect"
+    )
+      history.replaceState(null, "", "/");
+  }, [authenticated, isInitializing]);
+  const fetchRef = useRef(secureFetch);
+  fetchRef.current = secureFetch;
+  const api = useMemo(
+    () => createApi((...args) => fetchRef.current(...args)),
+    [],
+  );
+  const [state, setState] = useState(null);
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [view, setView] = useState("student");
+  const refresh = useCallback(
+    async (signal) => {
+      const next = await api("/api/state", { signal });
+      setState(next);
+      setError("");
+    },
+    [api],
+  );
+  useEffect(() => {
+    if (!authenticated || isInitializing) {
+      setState(null);
+      return;
+    }
+    const controller = new AbortController();
+    const poll = () => {
+      if (!document.hidden)
+        refresh(controller.signal).catch((e) => {
+          if (!controller.signal.aborted) {
+            setError(e.message);
+            if (e.status === 401 || e.status === 403) setState(null);
+          }
+        });
+    };
+    poll();
+    const timer = setInterval(poll, 15000);
+    return () => {
+      controller.abort();
+      clearInterval(timer);
+    };
+  }, [authenticated, isInitializing, refresh]);
+  useEffect(() => {
+    if (state && !state.user.roles.includes(view)) setView(state.user.roles[0]);
+  }, [state, view]);
+  async function run(path, method, body = {}) {
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const result = await api(path, { method, body });
+      setNotice(result.message);
+      await refresh();
+    } catch (e) {
+      setError(e.message);
+      if (e.status === 401 || e.status === 403) setState(null);
+    } finally {
+      setBusy(false);
+    }
+  }
+  if (isInitializing)
+    return (
+      <main className="loading" role="status">
+        Connecting to TideCloak…
+      </main>
+    );
+  const user = state?.user;
+  return (
+    <main className="shell">
+      <header className="topbar">
+        <Brand />
+        <div className="top-actions">
+          <span className={`auth-state ${authenticated ? "connected" : ""}`}>
+            <i />
+            {user?.name ||
+              (authenticated
+                ? "TideCloak · signed in"
+                : "TideCloak · secure sign-in")}
+          </span>
+          <button
+            className="button dark"
+            disabled={isLoading}
+            onClick={() =>
+              (authenticated ? logout() : login()).catch((e) =>
+                setError(e.message),
+              )
+            }
+          >
+            {authenticated ? "Log out" : "Log in with TideCloak"}
+          </button>
+        </div>
+      </header>
+      <Hero panel={state?.panel} />
+      {(error || initError) && (
+        <div className="notice login-error" role="alert">
+          {error || initError.message}
+          <button
+            className="button quiet"
+            onClick={() =>
+              initError ? reload() : refresh().catch((e) => setError(e.message))
+            }
+          >
+            Retry
+          </button>
+        </div>
+      )}
+      {notice && (
+        <div className="notice" role="status">
+          {notice}
+          <button
+            aria-label="Dismiss notification"
+            onClick={() => setNotice("")}
+          >
+            ×
+          </button>
+        </div>
+      )}
+      {!authenticated ? (
+        <section className="welcome-card">
+          <div className="eyebrow">YOUR PLACE STARTS HERE</div>
+          <h2>One identity. A shared, fair queue.</h2>
+          <p>
+            Sign in to see your courses and waitlist positions. Registrars and
+            reviewers get the tools assigned to their accounts.
+          </p>
+          <button
+            className="button dark"
+            disabled={isLoading || !!initError}
+            onClick={() => login().catch((e) => setError(e.message))}
+          >
+            Continue with TideCloak <span aria-hidden="true">→</span>
+          </button>
+        </section>
+      ) : !state ? (
+        <section className="welcome-card" role="status">
+          <h2>
+            {error ? "Your account needs attention" : "Loading your campus…"}
+          </h2>
+          <p>{error || "Reading your identity and course records."}</p>
+        </section>
+      ) : (
+        <>
+          <nav className="toolbar" aria-label="Your workspaces">
+            <div>
+              <span className="workspace-label">YOUR WORKSPACE</span>
+              {user.roles.map((role) => (
+                <button
+                  key={role}
+                  className={`workspace-tab ${view === role ? "active" : ""}`}
+                  aria-pressed={view === role}
+                  onClick={() => setView(role)}
+                >
+                  {role === "student"
+                    ? "My courses"
+                    : role === "registrar"
+                      ? "Course administration"
+                      : "Exception review"}
+                </button>
+              ))}
+            </div>
+            <div className="role-hint">
+              {user.title} · Shared records refresh every 15 seconds
+            </div>
+          </nav>
+          {view === "student" && (
+            <section className="section">
+              <SectionTitle
+                eyebrow="STUDENT DASHBOARD"
+                title="Your courses"
+                detail={`${state.courses.length} courses`}
+              />
+              <div className="course-grid">
+                {state.courses.map((course) => (
+                  <article className="course-card" key={course.id}>
+                    <div className="course-top">
+                      <span className="course-code">{course.code}</span>
+                      <span
+                        className={`seats ${course.enrolledCount < course.capacity ? "open" : "full"}`}
+                      >
+                        {Math.max(0, course.capacity - course.enrolledCount)}{" "}
+                        seats open
+                      </span>
+                    </div>
+                    <h3>{course.name}</h3>
+                    <CourseStats course={course} />
+                    {course.myStatus ? (
+                      <>
+                        <div
+                          className={`queue-status ${course.myStatus === "enrolled" ? "enrolled" : ""}`}
+                        >
+                          {course.myStatus === "enrolled"
+                            ? "Your place is confirmed"
+                            : `You are #${course.myPosition} on the waitlist`}
+                          <small>
+                            {course.myStatus === "enrolled"
+                              ? "You are enrolled in this course."
+                              : "Places are offered in FIFO order."}
+                          </small>
+                        </div>
+                        <button
+                          className="button quiet full-width"
+                          disabled={busy}
+                          onClick={() =>
+                            run(
+                              `/api/courses/${course.id}/enrolments/me`,
+                              "DELETE",
+                            )
+                          }
+                        >
+                          Withdraw
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        className="button dark full-width"
+                        disabled={busy}
+                        onClick={() =>
+                          run(`/api/courses/${course.id}/enrolments`, "POST")
+                        }
+                      >
+                        {course.enrolledCount < course.capacity
+                          ? "Enrol in course"
+                          : "Join waitlist"}
+                      </button>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+          {view === "registrar" && (
+            <section className="section">
+              <SectionTitle
+                eyebrow="REGISTRAR DASHBOARD"
+                title="Course administration"
+                detail="Capacity and exception requests"
+              />
+              <div className="registrar-grid">
+                {state.courses.map((course) => (
+                  <article className="course-card" key={course.id}>
+                    <span className="course-code">{course.code}</span>
+                    <h3>{course.name}</h3>
+                    <CapacityEditor
+                      course={course}
+                      busy={busy}
+                      save={(capacity) =>
+                        run(`/api/courses/${course.id}/capacity`, "PATCH", {
+                          capacity,
+                        })
+                      }
+                    />
+                    <CourseStats course={course} />
+                  </article>
+                ))}
+              </div>
+              <div className="policy-note">
+                Queue order, forced enrolment, student removal and panel changes
+                require an exception with two independent approvals.
+              </div>
+              <RequestForm
+                state={state}
+                busy={busy}
+                submit={(body) => run("/api/exception-requests", "POST", body)}
+              />
+            </section>
+          )}
+          {view === "approver" && (
+            <section className="section">
+              <SectionTitle
+                eyebrow="APPROVER PANEL"
+                title="Independent exception review"
+                detail="Two of three required"
+              />
+              <div className="panel-strip">
+                {state.panel.map((person, i) => (
+                  <div className="panel-person" key={person.id}>
+                    <Avatar person={person} index={i} />
+                    <span>
+                      <strong>{person.name}</strong>
+                      <small>{person.title}</small>
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <RequestForm
+                state={state}
+                busy={busy}
+                submit={(body) => run("/api/exception-requests", "POST", body)}
+              />
+            </section>
+          )}
+          {view !== "student" && (
+            <section className="section">
+              <SectionTitle
+                eyebrow="REVIEW HISTORY"
+                title="Exception requests"
+                detail={`${state.requests.filter((r) => r.status === "pending").length} pending`}
+              />
+              <div className="request-list">
+                {state.requests.map((request) => (
+                  <RequestCard
+                    key={request.id}
+                    {...{ request, state, user, busy, run }}
+                  />
+                ))}
+                {!state.requests.length && (
+                  <p className="empty">No exception requests yet.</p>
+                )}
+              </div>
+            </section>
+          )}
+          <section className="section">
+            <SectionTitle
+              eyebrow="PUBLIC EXCEPTIONS"
+              title="Reasons that changed a queue"
+            />
+            <div className="reason-list">
+              {state.publicExceptions.map((request) => (
+                <div className="reason-item" key={request.id}>
+                  <span className="approved-tag">APPROVED</span>
+                  <div>
+                    <strong>{actionNames[request.kind]}</strong>
+                    <p>{request.reason}</p>
+                  </div>
+                </div>
+              ))}
+              {!state.publicExceptions.length && (
+                <p className="empty">No exceptions have been approved.</p>
+              )}
+            </div>
+          </section>
+          <section className="section audit-section">
+            <SectionTitle
+              eyebrow="SHARED HISTORY"
+              title="Activity log"
+              detail="Recorded by the server"
+            />
+            <div className="audit-list">
+              {state.audit.map((entry) => (
+                <div className="audit-row" key={entry.id}>
+                  <time dateTime={entry.time}>
+                    {new Date(entry.time).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </time>
+                  <span className="audit-dot" />
+                  <div>
+                    <strong>{entry.kind.split(".").join(" ")}</strong>
+                    <p>{entry.summary}</p>
+                  </div>
+                </div>
+              ))}
+              {!state.audit.length && (
+                <p className="empty">
+                  Course actions and approval decisions will appear here.
+                </p>
+              )}
+            </div>
+          </section>
+        </>
+      )}
+      <Footer />
+    </main>
+  );
 }
-
-function CapacityEditor({ course, actor, dispatch }) {
+function RequestCard({ request, state, user, busy, run }) {
+  const course = state.courses.find((c) => c.id === request.data.courseId);
+  const target = state.people.find((p) => p.id === request.data.studentId);
+  const canVote =
+    user.roles.includes("approver") &&
+    state.panel.some((p) => p.id === user.id) &&
+    request.panelSnapshot.includes(user.id) &&
+    request.requesterId !== user.id &&
+    !request.approvals.some((p) => p.id === user.id);
+  return (
+    <article className="request-card">
+      <div className="request-head">
+        <div>
+          <span className="eyebrow">{actionNames[request.kind]}</span>
+          <h3>
+            {request.kind === "panel"
+              ? `Replace ${state.people.find((p) => p.id === request.data.replaceId)?.name} with ${state.people.find((p) => p.id === request.data.candidateId)?.name}`
+              : `${target?.name || "Student"} · ${course?.code}`}
+          </h3>
+        </div>
+        <span className={`status-tag ${request.status}`}>{request.status}</span>
+      </div>
+      <p className="request-reason">Reviewer details: {request.reason}</p>
+      <p className="request-reason">
+        Public explanation: {request.publicReason}
+      </p>
+      {request.kind === "force" && (
+        <p className="request-reason">
+          Approved capacity would be {request.data.resultingCapacity}.
+        </p>
+      )}
+      <div className="vote-row">
+        <span>
+          {request.approvals.length} of 2 approvals · Requested by{" "}
+          {request.requester}
+        </span>
+        {request.approvals.map((person) => (
+          <Avatar key={person.id} person={person} />
+        ))}
+      </div>
+      {request.status === "pending" && (
+        <div className="request-actions">
+          {canVote ? (
+            <>
+              <button
+                className="button approve"
+                disabled={busy}
+                onClick={() =>
+                  run(`/api/exception-requests/${request.id}/approvals`, "POST")
+                }
+              >
+                Approve as yourself
+              </button>
+              <button
+                className="button text-button"
+                disabled={busy}
+                onClick={() =>
+                  run(`/api/exception-requests/${request.id}/denial`, "POST")
+                }
+              >
+                Deny request
+              </button>
+            </>
+          ) : (
+            <span className="muted">
+              {request.requesterId === user.id
+                ? "Your request needs independent reviewers."
+                : request.approvals.some((p) => p.id === user.id)
+                  ? "Your approval is recorded."
+                  : "Only eligible panel members may review this request."}
+            </span>
+          )}
+        </div>
+      )}
+    </article>
+  );
+}
+function CourseStats({ course }) {
+  return (
+    <div className="course-stats">
+      <span>
+        Enrolled{" "}
+        <b>
+          {course.enrolledCount}/{course.capacity}
+        </b>
+      </span>
+      <span>
+        Waiting <b>{course.waitingCount}</b>
+      </span>
+    </div>
+  );
+}
+function CapacityEditor({ course, busy, save }) {
   const [capacity, setCapacity] = useState(String(course.capacity));
   useEffect(() => setCapacity(String(course.capacity)), [course.capacity]);
-
-  function save(event) {
-    event.preventDefault();
-    dispatch({ type: "capacity", courseId: course.id, capacity, actor });
-  }
-
-  return <form className="capacity-label" onSubmit={save}>
-    <label htmlFor={`capacity-${course.id}`}>Seat limit</label>
-    <input id={`capacity-${course.id}`} type="number" min="1" value={capacity} onChange={(event) => setCapacity(event.target.value)} />
-    <button className="button quiet" type="submit">Save</button>
-  </form>;
+  return (
+    <form
+      className="capacity-label"
+      onSubmit={(event) => {
+        event.preventDefault();
+        save(Number(capacity));
+      }}
+    >
+      <label htmlFor={`capacity-${course.id}`}>Seat limit</label>
+      <input
+        id={`capacity-${course.id}`}
+        type="number"
+        min={Math.max(1, course.enrolledCount)}
+        max="10000"
+        required
+        value={capacity}
+        onChange={(e) => setCapacity(e.target.value)}
+      />
+      <button className="button quiet" disabled={busy}>
+        Save
+      </button>
+    </form>
+  );
+}
+function RequestForm({ state, busy, submit }) {
+  const [kind, setKind] = useState("force");
+  const students = state.people.filter((p) => p.roles.includes("student"));
+  const candidates = state.people.filter(
+    (p) =>
+      p.roles.includes("approver") && !state.panel.some((m) => m.id === p.id),
+  );
+  return (
+    <form
+      className="request-form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        const body = {
+          kind,
+          reason: form.get("reason"),
+          publicReason: form.get("publicReason"),
+        };
+        if (kind === "panel")
+          Object.assign(body, {
+            replaceId: form.get("replaceId"),
+            candidateId: form.get("candidateId"),
+          });
+        else
+          Object.assign(body, {
+            courseId: form.get("courseId"),
+            studentId: form.get("studentId"),
+          });
+        submit(body);
+      }}
+    >
+      <div className="form-title">
+        <div>
+          <div className="eyebrow">REASONED EXCEPTIONS</div>
+          <h3>Propose a change</h3>
+        </div>
+        <span className="approval-badge">Two independent approvals</span>
+      </div>
+      <div className="form-grid">
+        <label>
+          Action
+          <select value={kind} onChange={(e) => setKind(e.target.value)}>
+            {Object.entries(actionNames).map(([key, name]) => (
+              <option key={key} value={key}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
+        {kind === "panel" ? (
+          <>
+            <label>
+              Replace member
+              <select name="replaceId" required>
+                {state.panel.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Eligible replacement
+              <select name="candidateId" required>
+                <option value="">Select a replacement</option>
+                {candidates.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </>
+        ) : (
+          <>
+            <label>
+              Course
+              <select name="courseId" required>
+                {state.courses.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.code}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Student
+              <select name="studentId" required>
+                {students.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </>
+        )}
+        <label className="reason-field">
+          Reviewer details · restricted to staff
+          <textarea
+            name="reason"
+            minLength={5}
+            maxLength={2000}
+            required
+            placeholder="Explain the evidence reviewers should consider."
+          />
+        </label>
+        <label className="reason-field">
+          Public explanation · published after approval
+          <textarea
+            name="publicReason"
+            minLength={5}
+            maxLength={240}
+            required
+            placeholder="Provide a brief explanation without private student details."
+          />
+        </label>
+      </div>
+      <div className="form-footer">
+        <span>
+          You cannot approve your own proposal. Course or panel changes may
+          require a fresh request.
+        </span>
+        <button className="button dark" disabled={busy}>
+          Submit for review
+        </button>
+      </div>
+    </form>
+  );
 }
