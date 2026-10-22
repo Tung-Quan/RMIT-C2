@@ -19,7 +19,12 @@ export default defineConfig({
     host: "localhost",
     port: 5137,
     strictPort: true,
-    proxy: { "/api": "http://127.0.0.1:3001" },
+    proxy: {
+      "/api": "http://127.0.0.1:3001",
+      "/careers-socket.io": { target: "http://127.0.0.1:3030", ws: true },
+      "/careers-hmr": { target: "http://127.0.0.1:5174", ws: true },
+      "/careers": { target: "http://127.0.0.1:5174", ws: true },
+    },
   },
   preview: { host: "localhost", port: 5137, strictPort: true },
 });
