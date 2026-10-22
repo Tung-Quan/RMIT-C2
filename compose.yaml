@@ -1,0 +1,43 @@
+name: fairenrol
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: fairenrol
+      POSTGRES_DB: fairenrol
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:54329:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fairenrol -d fairenrol"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  tidecloak-volume-init:
+    image: tideorg/tidecloak-dev:latest
+    user: "0"
+    entrypoint:
+      [
+        "/bin/bash",
+        "-c",
+        "chown -R 1000:0 /opt/keycloak/data/h2 && chmod -R g+rwX /opt/keycloak/data/h2",
+      ]
+    volumes:
+      - tidecloak-data:/opt/keycloak/data/h2
+  tidecloak:
+    image: tideorg/tidecloak-dev:latest
+    depends_on:
+      tidecloak-volume-init:
+        condition: service_completed_successfully
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:?Set KC_BOOTSTRAP_ADMIN_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - tidecloak-data:/opt/keycloak/data/h2
+volumes:
+  postgres-data:
+  tidecloak-data:
