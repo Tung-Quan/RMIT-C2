@@ -1,4 +1,5 @@
 export function createApi(secureFetch) {
+  const apiOrigin = import.meta.env.VITE_API_BASE_URL || window.location.origin;
   return async (
     path,
     { method = "GET", body, signal, idempotencyKey } = {},
@@ -9,7 +10,7 @@ export function createApi(secureFetch) {
       headers["Idempotency-Key"] = idempotencyKey || crypto.randomUUID();
     }
     const response = await secureFetch(
-      new URL(path, window.location.origin).href,
+      new URL(path, `${apiOrigin.replace(/\/$/, "")}/`).href,
       {
         method,
         headers,

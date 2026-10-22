@@ -984,3 +984,97 @@ a:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+.mobile-bottom-nav {
+  display: none;
+}
+.mobile-profile-scrim {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  display: grid;
+  align-items: end;
+  padding: 20px 14px calc(90px + env(safe-area-inset-bottom));
+  background: rgba(13, 34, 31, 0.28);
+  backdrop-filter: blur(3px);
+}
+.mobile-profile-sheet {
+  width: min(100%, 480px);
+  margin: 0 auto;
+  padding: 21px;
+  border: 1px solid rgba(24, 94, 81, 0.15);
+  border-radius: 18px;
+  background: #fffefa;
+  box-shadow: 0 22px 80px rgba(14, 44, 37, 0.2);
+}
+.mobile-profile-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.mobile-profile-heading button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 24px;
+  line-height: 1;
+}
+.mobile-profile-sheet > strong {
+  display: block;
+  color: var(--ink);
+  font: 700 20px/1.25 Manrope, sans-serif;
+}
+.mobile-profile-sheet p {
+  margin: 8px 0 17px;
+  color: var(--muted);
+  font-size: 13px;
+}
+@media (max-width: 520px) {
+  .shell {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  }
+  .mobile-bottom-nav {
+    position: fixed;
+    z-index: 40;
+    right: 12px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    left: 12px;
+    display: flex;
+    justify-content: space-around;
+    gap: 4px;
+    padding: 7px 5px;
+    border: 1px solid rgba(24, 94, 81, 0.13);
+    border-radius: 18px;
+    background: rgba(255, 254, 250, 0.96);
+    box-shadow: 0 12px 34px rgba(25, 56, 46, 0.17);
+    backdrop-filter: blur(18px);
+  }
+  .mobile-bottom-link {
+    display: flex;
+    min-width: 58px;
+    min-height: 52px;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #75837d;
+    text-decoration: none;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mobile-bottom-link svg {
+    width: 20px;
+    height: 20px;
+  }
+  .mobile-bottom-link.active {
+    background: #e7f0eb;
+    color: var(--green);
+  }
+}

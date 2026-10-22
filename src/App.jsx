@@ -23,6 +23,58 @@ function Footer() {
     </footer>
   );
 }
+function TabIcon({ name }) {
+  const paths = {
+    home: <><path d="m3 10 9-7 9 7" /><path d="M5 9v11h14V9M9 20v-6h6v6" /></>,
+    review: <><path d="M9 11 12 14 20 6" /><path d="M20 12v7H4V5h11" /></>,
+    careers: <><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2" /></>,
+    profile: <><circle cx="12" cy="8" r="4" /><path d="M5 21a7 7 0 0 1 14 0" /></>,
+  };
+  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
+}
+function MobileBottomNavigation({ authenticated, isLoading, user, view, setView, login, logout, onAuthError }) {
+  const [profileOpen, setProfileOpen] = useState(false);
+  const roles = user?.roles || [];
+  const homeRole = roles.includes("student") ? "student" : roles[0];
+  const reviewRole = roles.includes("approver") ? "approver" : roles.includes("registrar") ? "registrar" : null;
+  const signIn = () => login().catch(onAuthError);
+
+  return (
+    <>
+      {profileOpen && (
+        <div className="mobile-profile-scrim" onClick={() => setProfileOpen(false)}>
+          <section id="mobile-profile-sheet" className="mobile-profile-sheet" role="dialog" aria-modal="true" aria-label="Your FairEnrol account" onClick={(event) => event.stopPropagation()}>
+            <div className="mobile-profile-heading">
+              <span className="eyebrow">YOUR ACCOUNT</span>
+              <button type="button" aria-label="Close account panel" onClick={() => setProfileOpen(false)}>×</button>
+            </div>
+            <strong>{user?.name || "Welcome to FairEnrol"}</strong>
+            <p>{user ? `${user.title} · ${roles.join(" · ")}` : "Sign in to view your courses and account."}</p>
+            <button className="button dark" disabled={isLoading} onClick={() => (authenticated ? logout() : signIn())}>
+              {authenticated ? "Sign out" : "Sign in with TideCloak"}
+            </button>
+          </section>
+        </div>
+      )}
+      <nav className="mobile-bottom-nav" aria-label="FairEnrol navigation">
+        <button type="button" className={`mobile-bottom-link ${!profileOpen && (view === homeRole || !authenticated) ? "active" : ""}`} onClick={() => { if (homeRole) setView(homeRole); setProfileOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+          <TabIcon name="home" /><span>Home</span>
+        </button>
+        {reviewRole && (
+          <button type="button" className={`mobile-bottom-link ${view === reviewRole ? "active" : ""}`} onClick={() => { setView(reviewRole); setProfileOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+            <TabIcon name="review" /><span>Review</span>
+          </button>
+        )}
+        <a className="mobile-bottom-link" href="/careers/index.html">
+          <TabIcon name="careers" /><span>Careers</span>
+        </a>
+        <button type="button" className={`mobile-bottom-link ${profileOpen ? "active" : ""}`} aria-expanded={profileOpen} aria-controls="mobile-profile-sheet" onClick={() => setProfileOpen((open) => !open)}>
+          <TabIcon name="profile" /><span>Account</span>
+        </button>
+      </nav>
+    </>
+  );
+}
 function Avatar({ person, index = 0 }) {
   return (
     <span title={person.name} className={`avatar a${index % 3}`}>
@@ -137,6 +189,10 @@ export default function App() {
       location.pathname === "/auth/redirect"
     )
       history.replaceState(null, "", "/");
+    if (!isInitializing && authenticated && sessionStorage.getItem("fairenrol:postLogin") === "/careers/index.html") {
+      sessionStorage.removeItem("fairenrol:postLogin");
+      location.replace("/careers/index.html");
+    }
   }, [authenticated, isInitializing]);
   const fetchRef = useRef(secureFetch);
   fetchRef.current = secureFetch;
@@ -209,6 +265,7 @@ export default function App() {
       <header className="topbar">
         <Brand />
         <div className="top-actions">
+          <a className="button light" href="/careers/index.html">Careers ↗</a>
           <span className={`auth-state ${authenticated ? "connected" : ""}`}>
             <i />
             {user?.name ||
@@ -499,6 +556,7 @@ export default function App() {
           </section>
         </>
       )}
+      <MobileBottomNavigation authenticated={authenticated} isLoading={isLoading} user={user} view={view} setView={setView} login={login} logout={logout} onAuthError={(e) => setError(e.message)} />
       <Footer />
     </main>
   );
