@@ -1,0 +1,87 @@
+{
+  "photos": [
+    {
+      "name": "hero-career-workspace",
+      "source": "https://unsplash.com/photos/diverse-group-of-students-gathered-around-laptop-kp7qkHTgSKc",
+      "license": "Unsplash License",
+      "credit": "Vitaly Gariev / Unsplash",
+      "alt": "Diverse group of students collaborating around a laptop in a lecture hall."
+    },
+    {
+      "name": "opportunity-career-fair",
+      "source": "https://commons.wikimedia.org/wiki/File:Career_Fair_(3344072303).jpg",
+      "license": "CC BY 2.0",
+      "credit": "COD Newsroom, Flickr/Wikimedia Commons",
+      "alt": "Students meeting employers at a university career fair."
+    },
+    {
+      "name": "application-planning",
+      "source": "https://commons.wikimedia.org/wiki/File:Biotech_student_working_hard.jpg",
+      "license": "CC0",
+      "credit": "Biotech For Fun, Wikimedia Commons",
+      "alt": "Student reviewing work on a laptop during application planning."
+    }
+  ],
+  "logos": [
+    {
+      "name": "google",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/google.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "intel",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/intel.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "samsung",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/samsung.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "nike",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/nike.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "spotify",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/spotify.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "airbnb",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/airbnb.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "netflix",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/netflix.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "apple",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/apple.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "meta",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/meta.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "github",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/github.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "zoom",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/zoom.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    },
+    {
+      "name": "figma",
+      "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/figma.svg",
+      "license": "Simple Icons CC0-1.0; trademarks remain property of their owners"
+    }
+  ]
+}
