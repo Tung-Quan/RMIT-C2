@@ -1,0 +1,979 @@
+{
+  "sourceRepository": "C:/disk D/Internship-Application",
+  "sourceCommit": "51f019e3869ea2a6acde6cc6ed1ef3a85ef677fe",
+  "localAiCommit": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+  "files": [
+    {
+      "path": "backend/Dockerfile",
+      "sha256": "664cd6b145a430e104bd14e3c88d8a1df620dd04e6a6faaf20ba1c4f015d7c12"
+    },
+    {
+      "path": "backend/alembic.ini",
+      "sha256": "e133fab22accae9672cc705293d42b70f5e12c20ed3b7426059beb4930d4c72d"
+    },
+    {
+      "path": "backend/alembic/env.py",
+      "sha256": "17d2dfc04596e59d19f44b65f918c1427b8a1ddec53b2bf2c3f07af1e45b37ae"
+    },
+    {
+      "path": "backend/alembic/script.py.mako",
+      "sha256": "8deb5f094438977523c1467f84cf17cb007e8ba48ea44a902a13295237dbffe4"
+    },
+    {
+      "path": "backend/alembic/versions/0001_initial.py",
+      "sha256": "f7e38ca79987ded74c43251dce58a15be66c2cba4f4132716cc87a7f9b7f22d8"
+    },
+    {
+      "path": "backend/alembic/versions/0002_two_sided_platform.py",
+      "sha256": "8a667d5dce7894de517333cbc66af35ac20f0ac538f40d34a013599c608b766a"
+    },
+    {
+      "path": "backend/alembic/versions/0003_bigint_job_salaries.py",
+      "sha256": "ffb4737c8b9864c309b5fae1481ae44e2ae1121db437ef90c9b48c0266986515"
+    },
+    {
+      "path": "backend/alembic/versions/0004_document_texts.py",
+      "sha256": "519558bf9873f9d7164d5b2be1d2e8efb84b19736508b17c9ff0099b807c4190"
+    },
+    {
+      "path": "backend/alembic/versions/0004_idempotency_records.py",
+      "sha256": "bbee3e2f5ce782926232933f7b9134a0bdee3fe97c837a078ecf5e168e466094"
+    },
+    {
+      "path": "backend/alembic/versions/0005_ai_parse_status.py",
+      "sha256": "f4536290f4dd9db651c2f5471d53728e9dcd0fe18fbd1e577c34164a91a18906"
+    },
+    {
+      "path": "backend/alembic/versions/0005_idempotency_status_check.py",
+      "sha256": "4bcef59f9cca75cf8c6a81023d08bc68726369b72fe14adf7a20c82a2fd2513c"
+    },
+    {
+      "path": "backend/alembic/versions/0006_ai_cv_parse_status.py",
+      "sha256": "ed8cba06394b730e06c1537a86c7d7e6437588ff9d922b60274f4fa00ffdadfb"
+    },
+    {
+      "path": "backend/alembic/versions/0006_job_application_versions.py",
+      "sha256": "1ee968882e02f69ea4a924ef112471f5eff7b72d687f7e25bd1d5a8a3fcbf3d7"
+    },
+    {
+      "path": "backend/alembic/versions/0007_outbox_events.py",
+      "sha256": "58bb1e596de139b8691348db0957874178bf9c82a8a3c3161681a0c49eb56fc5"
+    },
+    {
+      "path": "backend/alembic/versions/0008_async_processing_jobs.py",
+      "sha256": "1a70e995ffa00e2c096fa816e080cd15885be9336180c4dcb5a13abb97ae3e1e"
+    },
+    {
+      "path": "backend/alembic/versions/1065bcf66cb9_0007_add_rerank_run_tables.py",
+      "sha256": "221c7d574e124654315892615bdfebe07a6782ab49cb11856f754e694f302f4c"
+    },
+    {
+      "path": "backend/app/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/app/core/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/app/core/config.py",
+      "sha256": "47bb3221b5bff045cfa6fd87854ba2c9bb8ede12cdf09d60bbde7df72c3995e0"
+    },
+    {
+      "path": "backend/app/core/logging_config.py",
+      "sha256": "63e462c6f0adf94caf95dbe1f6c788940c68dcef437d99869d8d56506ddce7f8"
+    },
+    {
+      "path": "backend/app/core/metrics.py",
+      "sha256": "bb00c7e4f1619f8c1c6163c0b139e2d009e6432d815f2b704526393a9af83f93"
+    },
+    {
+      "path": "backend/app/core/password_validation.py",
+      "sha256": "f247c8ecf2045c89b5399a1324340fc0adccba123379fa2b103deb78d004cb6f"
+    },
+    {
+      "path": "backend/app/core/security.py",
+      "sha256": "3747428f5eacc2e03f38616445a11119ae54e5640ebe0ec5f26cabd0558216c2"
+    },
+    {
+      "path": "backend/app/core/tracing.py",
+      "sha256": "927408bd72080a4cd2505d2d30a1e42c87b27d8eb73032f0aaa90608bed18969"
+    },
+    {
+      "path": "backend/app/db/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/app/db/conflicts.py",
+      "sha256": "c717426075e5275b5d55960ba240d77c168d2164b59d8df8dd23a373d29675cf"
+    },
+    {
+      "path": "backend/app/db/database.py",
+      "sha256": "cd4f82ad6148247c378cfdb5bf77509e07f44da423e5653ad32cb271b2aa0afe"
+    },
+    {
+      "path": "backend/app/db/models.py",
+      "sha256": "e6e141fc8b6dfdb6008b4c7a1da53e2e66e1fa70290b0355b0db8956dea1dbbb"
+    },
+    {
+      "path": "backend/app/db/schemas.py",
+      "sha256": "95429a9f259766a7957c21df7b4382db826c7fc71a6fd3bb5cc67e73f9494ead"
+    },
+    {
+      "path": "backend/app/dependencies.py",
+      "sha256": "7d0064aa9e591914cdc5d35a57a434a757deffc6b7dad8863928103f18b7b042"
+    },
+    {
+      "path": "backend/app/main.py",
+      "sha256": "4996a5e535c41cd53a1784db861a9286de29128a97bbdd158f5cc9f9e24449a5"
+    },
+    {
+      "path": "backend/app/routers/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/app/routers/ai.py",
+      "sha256": "3164c40c40ae6d35c45fe3688d13b630ac13615f72c5cec5d2ad1dff7173c1d3"
+    },
+    {
+      "path": "backend/app/routers/applications.py",
+      "sha256": "92ca9e60578ca06785106f5a4b4bebfedb8085903ffd356ee57e8976468c5aec"
+    },
+    {
+      "path": "backend/app/routers/auth.py",
+      "sha256": "6afdc02d3f050d04881452fa15d220fa0e6f94372e22aa4868f34a516d6ba8ed"
+    },
+    {
+      "path": "backend/app/routers/candidate.py",
+      "sha256": "aa00a21693a6996b7ee32c15a59ca6a8e17ab7eb15cf262009ee4d915cbb0b44"
+    },
+    {
+      "path": "backend/app/routers/companies.py",
+      "sha256": "b7b69cda15cb1fa6761a66b4e92fac1d7c133719352a8cd6eb6a50ca9a3ea335"
+    },
+    {
+      "path": "backend/app/routers/dashboard.py",
+      "sha256": "f49ea1931995decb862994924447d526476a2bde123cac845792affbfe7c0b97"
+    },
+    {
+      "path": "backend/app/routers/documents.py",
+      "sha256": "c94503bab0aa409b0ca50d7e5e60d860f0edbab4126c4c4b46a3058b91360fd2"
+    },
+    {
+      "path": "backend/app/routers/hr.py",
+      "sha256": "f840f5930bddf025af9fe5b3fbc4fc370526acab05b596671015184ba293a5a0"
+    },
+    {
+      "path": "backend/app/routers/jobs.py",
+      "sha256": "b8429e4d8d86a206e49ff93c092b1bbf9787c2d57914b12dc2f96417a8a38914"
+    },
+    {
+      "path": "backend/app/routers/platform_helpers.py",
+      "sha256": "bd910df34031cbfcd1e7ca8ac691028aa5d0f05287d123e65393f232f4a75d0e"
+    },
+    {
+      "path": "backend/app/routers/processing_jobs.py",
+      "sha256": "2e09b6abd631d2bf24f38eb87a5139fc4b58a798c79816a0d075e2e5d549a86d"
+    },
+    {
+      "path": "backend/app/seed.py",
+      "sha256": "89b81d4d0ea9ace25b1d1fd2fa0cfa0be66d654dc6e54cede5f00d1a7031fa52"
+    },
+    {
+      "path": "backend/app/services/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/app/services/ai_service.py",
+      "sha256": "a2963308596d43650f10f0a5dc87b4a6b54b79745f98fc38b62347899d627f23"
+    },
+    {
+      "path": "backend/app/services/cv_parser_client.py",
+      "sha256": "d6329dbb9407661b378a804dc35e383474a5e5aacfc8398bfa5bc92b9960ff76"
+    },
+    {
+      "path": "backend/app/services/cv_parser_task.py",
+      "sha256": "1141fdd64c832914e4baa15d7448002e6ffc7258f1445108dcc03f5fb828bf48"
+    },
+    {
+      "path": "backend/app/services/document_text_service.py",
+      "sha256": "c1ab27c04e48bc02dfb25224376dac103d49d47a56e1468a8c2a9bbbeda9da9c"
+    },
+    {
+      "path": "backend/app/services/idempotency_service.py",
+      "sha256": "3f8148196ebe1526cd9a75671d6a50fa5311b75580d7ce379cc6b43cfd09f632"
+    },
+    {
+      "path": "backend/app/services/job_parser_client.py",
+      "sha256": "3cf93154312c8b49823a3a53de0043604adbc64a1fdce46ecd741efbda8cf35b"
+    },
+    {
+      "path": "backend/app/services/job_parser_task.py",
+      "sha256": "2bc4e7dd41045eb13b89107dda98fa3325db1f6249744afe83b3be45502a6143"
+    },
+    {
+      "path": "backend/app/services/matching_task.py",
+      "sha256": "6a797263a888b1e1fd71d010a46f62508905c6d923b175c3cc39deeb4d081f2d"
+    },
+    {
+      "path": "backend/app/services/optimistic_concurrency.py",
+      "sha256": "460d677382d83335b0624d0bf4c57f30b77b52d9b8448b77a78816609474fd87"
+    },
+    {
+      "path": "backend/app/services/outbox.py",
+      "sha256": "f3aa32e69f7bb933a040ac3a867ef9e8c65c789ede447463aefae1637c54b7d9"
+    },
+    {
+      "path": "backend/app/services/outbox_publishers.py",
+      "sha256": "ae2b38dcf05b283a816cd7fded96f1e90441fc13bbe562a8c97f922235d0f6ff"
+    },
+    {
+      "path": "backend/app/services/processing_executors.py",
+      "sha256": "3127da7156c5db2c1ad6042a1333eac029d26987a597ed8b744c250e44f3c520"
+    },
+    {
+      "path": "backend/app/services/processing_jobs.py",
+      "sha256": "c481db631f4d0bed6a04e960bb8dfaedf59a873ad7109de9a0eff5598dc33937"
+    },
+    {
+      "path": "backend/app/services/s3_service.py",
+      "sha256": "4c090c96be0e7e6258dc833aedd70e0583ed86d8bcce8160934192fa07c60172"
+    },
+    {
+      "path": "backend/app/services/storage_service.py",
+      "sha256": "d3b7c66b73fedb1c4b07fec8dd80d8e4343cb11d7598fb3bdc545792fbb79f18"
+    },
+    {
+      "path": "backend/app/services/workflow_commands.py",
+      "sha256": "c707465ffb1d7c397a3e95e4169056710b474d9d092a6e5e75b5afc6fde0b8f0"
+    },
+    {
+      "path": "backend/app/services/workflow_idempotency.py",
+      "sha256": "66e9c7051272083a25d0f89d00a03129b54c49b40f2d917e8e45543569c9a4e6"
+    },
+    {
+      "path": "backend/app/workers/__init__.py",
+      "sha256": "011ce7272f64a047a2d37445e914d742f2cbdd0c989d19fa883783706fec456d"
+    },
+    {
+      "path": "backend/app/workers/outbox_admin.py",
+      "sha256": "7edd4b4a1d7b33f81dbefa9257f1e01d51b0cd5501b58c51182b2040529e5c13"
+    },
+    {
+      "path": "backend/app/workers/outbox_dispatcher.py",
+      "sha256": "000ac75e6e7eb86fb296c04a21e2ee77078f600110f5f54b3fbb5ab5323b7481"
+    },
+    {
+      "path": "backend/app/workers/processing_worker.py",
+      "sha256": "e9757a4a66857be84bbb77f50e996c555993af79e0447be01c7746fe7979e68e"
+    },
+    {
+      "path": "backend/requirements.txt",
+      "sha256": "017f75aabf76f24125acec72146523db7fa65ffd155f3e0080630dffb4862a6c"
+    },
+    {
+      "path": "backend/tests/conftest.py",
+      "sha256": "21bb251f2859c38cf5a2b5488a07e86c78493a89a1111835541ff61e0f8bb766"
+    },
+    {
+      "path": "backend/tests/test_ai_recruitment.py",
+      "sha256": "a691f01809b9ece1af1343012fe333aab6341e711aa5d33febadc8585c19f29a"
+    },
+    {
+      "path": "backend/tests/test_ai_service.py",
+      "sha256": "29310714f0c2b6c40a6783c99070ba593331a3f1dd17fa17dadcdaae3c085c28"
+    },
+    {
+      "path": "backend/tests/test_applications.py",
+      "sha256": "7801b168022496693d76c9e22ccb06cad4f52bfdde4151d4ce88c986017b8d4a"
+    },
+    {
+      "path": "backend/tests/test_apply_idempotency.py",
+      "sha256": "fe03512ccf641e7b84aaa0796801d0570496718496d05621cc161419c95eaac3"
+    },
+    {
+      "path": "backend/tests/test_apply_idempotency_postgres.py",
+      "sha256": "42f234564719c19e16455627f7534794d3ed85ad26b27f02b33b7977cafd2e6f"
+    },
+    {
+      "path": "backend/tests/test_auth.py",
+      "sha256": "39c103a05ba8997c8364cec2695e3116e170864e31943605548f8ee8a624b312"
+    },
+    {
+      "path": "backend/tests/test_concurrency_phase1.py",
+      "sha256": "5979a1a7b768488845640988ec4d80eaf3345a5476c67de0dffb2a280bdf0855"
+    },
+    {
+      "path": "backend/tests/test_documents.py",
+      "sha256": "63219dccd56e3af9ed65b1841672bfc89d102726ca4e6cff8ec86d988496361a"
+    },
+    {
+      "path": "backend/tests/test_idempotency_cleanup.py",
+      "sha256": "850bf51ca98254dc9f1648b8781f355bd915e97f6e78c070146cb878545b1380"
+    },
+    {
+      "path": "backend/tests/test_optimistic_concurrency.py",
+      "sha256": "78e60a9a7dc7cf5ed50109d2497621c6f26c82bc94af2b50c5184ab094efefb8"
+    },
+    {
+      "path": "backend/tests/test_optimistic_concurrency_postgres.py",
+      "sha256": "542a063e53dd8ecd3afb6385549a62dd514a1f1b770dcc9a14ad0e1781aa4012"
+    },
+    {
+      "path": "backend/tests/test_outbox_admin.py",
+      "sha256": "a95c9185eb2f895e90bf2f2e39c7223119796c1aa423c9287e16ba1810147947"
+    },
+    {
+      "path": "backend/tests/test_outbox_events.py",
+      "sha256": "f85aaba30c93602ebee730df5bebcb5f8b7463810ca637bccd3b4482501d2c70"
+    },
+    {
+      "path": "backend/tests/test_outbox_postgres.py",
+      "sha256": "1b337492896f1ea482e6d852e91088b8e2452a3eb280f9eb6a2334982a4fd2dc"
+    },
+    {
+      "path": "backend/tests/test_outbox_publishers.py",
+      "sha256": "bf86bea5ca851607615bf6d7cad086f06678f46a3ebf6ed03e089414540688a1"
+    },
+    {
+      "path": "backend/tests/test_password_validation.py",
+      "sha256": "3dd9cd4d5d93560eb82a1cd0f8076fc9b84bd89f61dfd1403cea37271aa4be69"
+    },
+    {
+      "path": "backend/tests/test_platform_two_sided.py",
+      "sha256": "8c665d466c6062be786660cc46b114c6658f37f9ec5243f8f75ebbca1291b7df"
+    },
+    {
+      "path": "backend/tests/test_processing_jobs.py",
+      "sha256": "5f3c89cd32ba072b74abf6fdcab65f35fa70fd8ba904cdf8376ea808e87a998c"
+    },
+    {
+      "path": "backend/tests/test_processing_jobs_postgres.py",
+      "sha256": "2378b28d8644e83db070437bec64c1c3d3a77c31f0df6f7974c161c3c645c273"
+    },
+    {
+      "path": "backend/tests/test_s3_service.py",
+      "sha256": "81171529d0ebb5083f9fff5b2ac623fb97977f8f154e6b751cdd87eba9b7a10b"
+    },
+    {
+      "path": "backend/tests/test_workflow_commands.py",
+      "sha256": "e746aeffd03f885a0be17202702a8e05dcfec9b887c917f5f697436c35d94fc9"
+    },
+    {
+      "path": "chat-service/Dockerfile",
+      "sha256": "c9e438cbdf04c89e6fed1f3960eba489563e2f5b23b9aa659bd4fae7fef6baee"
+    },
+    {
+      "path": "chat-service/controller/groupController.js",
+      "sha256": "3962ed5b222981df865a6407bf023af4e76de960446c0e03d229642b9de2c4fd"
+    },
+    {
+      "path": "chat-service/controller/messageController.js",
+      "sha256": "8843f69ba88d465fc70c1bb6e2b23662ba3206b1e596829e47df9462202aec4a"
+    },
+    {
+      "path": "chat-service/controller/terminalController.js",
+      "sha256": "709e62c47f403946b1325e1b95279cbca5c7fb0afd071fb77e39f14ae243627c"
+    },
+    {
+      "path": "chat-service/controller/userController.js",
+      "sha256": "e114a792f587442cd631a10893538c7777a2eb763505d96039e61259779259a3"
+    },
+    {
+      "path": "chat-service/lib/cors.js",
+      "sha256": "8eaa1cee4fe96a17ed53d761a6df836fbd25ac039c7cbfe8fc8889cfd90a9905"
+    },
+    {
+      "path": "chat-service/lib/db.js",
+      "sha256": "b39d173b2c290aa0e0c70a458ceab192835122f7fcbd0dc1f40f266099014582"
+    },
+    {
+      "path": "chat-service/lib/dynamo.js",
+      "sha256": "737586de0ce8fe9183e220dd67a499889b59f5a82b95cf816e4026c3a8bfb3d5"
+    },
+    {
+      "path": "chat-service/lib/env.js",
+      "sha256": "4f44598814438437497b00d9e3c299af1451c20cb4e2c1392732f2cd21d30a65"
+    },
+    {
+      "path": "chat-service/lib/messagePayload.js",
+      "sha256": "5bbc7ca4f91fa575034cc1d1b8a25b01deeeebbc77cfb1e7dcba67710d97148b"
+    },
+    {
+      "path": "chat-service/lib/redis.js",
+      "sha256": "82fe04ed974a0a9f2fecd63eb0e4584275efc58286413945db59bea9308120ac"
+    },
+    {
+      "path": "chat-service/lib/s3Storage.js",
+      "sha256": "9ce16c0c6094c4859d7f6907ddb65c9a271d25c8b0f5c4044a8cd784fafdda62"
+    },
+    {
+      "path": "chat-service/lib/utils.js",
+      "sha256": "c6ab74fd6bee80f35dc738134d21ddfbcd6a62e3fc32088e90f9858ef9c1d7b6"
+    },
+    {
+      "path": "chat-service/middleware/auth.js",
+      "sha256": "814b2262b53cca27b1f362596d3f3de14a4a6896173e409e9904cf7cb9dfe2d5"
+    },
+    {
+      "path": "chat-service/package-lock.json",
+      "sha256": "e20e453adac85f64cd892b41a03b8d4106c9601a674de4eb77fee79416a80db6"
+    },
+    {
+      "path": "chat-service/package.json",
+      "sha256": "6d08f13071ca22d06785ca8c93a4f6dfcd0a599feaf31837f1c7c87b21a36b75"
+    },
+    {
+      "path": "chat-service/repositories/chatRepository.js",
+      "sha256": "b2cabab24b35b17e6ece643a27da415d1df75ba5e235c24867ca2d51fed11dd3"
+    },
+    {
+      "path": "chat-service/routes/groupRoutes.js",
+      "sha256": "a483dc19cb087b65d52720836b7af68c04b38ad87622287128eeae0a075c08ef"
+    },
+    {
+      "path": "chat-service/routes/messageRoutes.js",
+      "sha256": "7c397c02b676fda4c714aa92e1b043f49f52f0b9a017a0125f8dda8726567983"
+    },
+    {
+      "path": "chat-service/routes/userRoutes.js",
+      "sha256": "48b6e88ecf51de4ab75463e5e102f6caa53551cd087d7d1649a317adb313ed02"
+    },
+    {
+      "path": "chat-service/scripts/check-syntax.mjs",
+      "sha256": "c02fb52e3098ab46ed5655e3f49f58ffc8927817cb1df2840638f4cf1714ca9a"
+    },
+    {
+      "path": "chat-service/scripts/init-db.js",
+      "sha256": "2515897b7fa18d0afe6284cdf1885d63f4012b1d84d967afa7f9399ea41ba561"
+    },
+    {
+      "path": "chat-service/server.js",
+      "sha256": "6576d5d791083cb59aeeec83ae83032455a7f7e75c6ae5916c22bd33653a0c2b"
+    },
+    {
+      "path": "chat-service/src/metrics.js",
+      "sha256": "346c5c5c888f4c41813301d184a4315fa40196e9a3fb020e29d7ef889dff23c0"
+    },
+    {
+      "path": "chat-service/src/tracing.js",
+      "sha256": "1ad5dc173032e772aac305c1d8ba8397ff5ae0bab37e55bad2a9008d3ddb66a7"
+    },
+    {
+      "path": "chat-service/tests/chatRepository.concurrency.test.js",
+      "sha256": "71b1b5600d69ac6c85957f8ae7f9a7e9485b720160cf7cf07983dad6320b3e46"
+    },
+    {
+      "path": "chat-service/tests/cors.test.js",
+      "sha256": "9c087481d214e660a13c5894cf0c26ee429078af380bc6c0c42ad498fad00633"
+    },
+    {
+      "path": "frontend/index.html",
+      "sha256": "95bbd201434557b439c987f99067016a184b9ff6337b5ac80be8526a8b6dfc88"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "sha256": "06b27036ee651a2e56067e0f0e8c132b75aa015ea0065ee1914b5f6c6bb18a54"
+    },
+    {
+      "path": "frontend/package.json",
+      "sha256": "a8ef4631ee0532ea875f079895350648774475678b43b6ff5fd177c73ee7ef32"
+    },
+    {
+      "path": "frontend/postcss.config.js",
+      "sha256": "d00d62d72fecfc7e4dc649a070e4767f89235844aba390bf6b4ba192b9722957"
+    },
+    {
+      "path": "frontend/public/assets/brands/airbnb.svg",
+      "sha256": "cc1d14d6ccf455f29d5ba1c513d97dc86030212ab8fbc468e2c53125eec599fb"
+    },
+    {
+      "path": "frontend/public/assets/brands/apple.svg",
+      "sha256": "bf086c0942bcabbef9ad85fd940908182c19c92b36221de118937ee3104b1e07"
+    },
+    {
+      "path": "frontend/public/assets/brands/figma.svg",
+      "sha256": "8ca082d419d0768cdb423d0fc6ad063fff8c5fed0dd742c448fbeb1f47556e3e"
+    },
+    {
+      "path": "frontend/public/assets/brands/github.svg",
+      "sha256": "11622361abcf39ffd2aa91236d12ef8405fe6fdc82ac0b90cbebd5f702707693"
+    },
+    {
+      "path": "frontend/public/assets/brands/google.svg",
+      "sha256": "7d3a7765fa4023ee51299867556bf09b233125db322b71f52a9e85fa9c829d25"
+    },
+    {
+      "path": "frontend/public/assets/brands/intel.svg",
+      "sha256": "74441e10a614a80eb7fdba08561d9b920f638f9c2d59f592b0c6813ec871af99"
+    },
+    {
+      "path": "frontend/public/assets/brands/meta.svg",
+      "sha256": "7ddce66efd0f7bd7795caba7ee57a782e43079683d07384d52b9c703f87b85ee"
+    },
+    {
+      "path": "frontend/public/assets/brands/netflix.svg",
+      "sha256": "15b35d0e433317f2c143540605f9b6db177a9d7aba6910dd6efd8b61f7af6ea8"
+    },
+    {
+      "path": "frontend/public/assets/brands/nike.svg",
+      "sha256": "3788e0e019e2f996c238698f06317e75933a7de59bee43812cc09de82f876be5"
+    },
+    {
+      "path": "frontend/public/assets/brands/samsung.svg",
+      "sha256": "c58ccae72a9f42c6d106c7664e43bd9c8d595de3cb7aa93cb3db70ec595d66b4"
+    },
+    {
+      "path": "frontend/public/assets/brands/spotify.svg",
+      "sha256": "ddedfa65a230b76c6dd3795a11d310dbe231a6e4e93aabbcbea0b35c1b3a7710"
+    },
+    {
+      "path": "frontend/public/assets/brands/zoom.svg",
+      "sha256": "158365b822893257321c8fa6ad0fa92ce94077dde98b957bc32c8a9a939b8e57"
+    },
+    {
+      "path": "frontend/public/assets/home/asset-sources.json",
+      "sha256": "b7eaa311ed01b047bacb6d3379a412e41e5532698a07c7d59ad6ec01887eef68"
+    },
+    {
+      "path": "frontend/public/assets/home/final-cta/application-planning-desktop.webp",
+      "sha256": "90cb81bd693af29515c9e48bee709e7df5eb5e86c39cf7ed7c696dcb30f8c48b"
+    },
+    {
+      "path": "frontend/public/assets/home/final-cta/application-planning-mobile.webp",
+      "sha256": "9db47a9e069df067628f77988334cb6852925c03e961c71f1589fb1f6ba51e67"
+    },
+    {
+      "path": "frontend/public/assets/home/final-cta/application-planning-tablet.webp",
+      "sha256": "5a698224219e9fa49578f8153ec464ed37815ccebc0ac89d3e5203bca6a9df0a"
+    },
+    {
+      "path": "frontend/public/assets/home/hero/hero-internship-workspace-desktop.webp",
+      "sha256": "f9b6c06ef2d0224d68148e60ef3aa6c31a572287699888d1970afac8c8ee2bc3"
+    },
+    {
+      "path": "frontend/public/assets/home/hero/hero-internship-workspace-mobile.webp",
+      "sha256": "87be9da7721240590975a4f6398664d24f733331f582bedfdea0bebeddab091e"
+    },
+    {
+      "path": "frontend/public/assets/home/hero/hero-internship-workspace-tablet.webp",
+      "sha256": "e67fd5b6c12e91dc54a965fb3c131cfc4b197f7f412e248171d7bbd0eb57f63c"
+    },
+    {
+      "path": "frontend/public/assets/home/opportunities/opportunity-career-fair-desktop.webp",
+      "sha256": "692c76092bccc13c712731c14f0e8067c46c9d47a08f04cf8bf88bbfbd2fa28e"
+    },
+    {
+      "path": "frontend/public/assets/home/opportunities/opportunity-career-fair-mobile.webp",
+      "sha256": "68a86fe7c32de1c7642895cffb76e11174bb90bf35b6559914b00801a30ba120"
+    },
+    {
+      "path": "frontend/public/assets/home/opportunities/opportunity-career-fair-tablet.webp",
+      "sha256": "dfed684ef158be25bd1739a5c64dc5c674c3d2f8869afca42aa215a4e206dfaa"
+    },
+    {
+      "path": "frontend/public/favicon.svg",
+      "sha256": "7759a210b995e0e1be7d8ccf471a8df4609b9e3070cec11fbec33a31a982f58b"
+    },
+    {
+      "path": "frontend/scripts/lint-source.mjs",
+      "sha256": "8c6d0e1ad58ad437d88af52ad9ba281023480979e6b991ae806bf8c41f9bd09b"
+    },
+    {
+      "path": "frontend/src/App.jsx",
+      "sha256": "fb17ea4eac0187d567a7b4f421cbfe83a27a0e8bc3d00a1d0690ea14dba041ba"
+    },
+    {
+      "path": "frontend/src/api/applications.js",
+      "sha256": "3a66cb0927b57a0930dd706c3c893edb665d482b1953cf79151cdc63ad42253c"
+    },
+    {
+      "path": "frontend/src/api/auth.js",
+      "sha256": "d45b81aabae6aa026001e659d04c35d592a28408e05c9efa10e781f301142c0d"
+    },
+    {
+      "path": "frontend/src/api/candidate.js",
+      "sha256": "bd449a79da4cf1dc75644084461b62fe62c5726f0fd0e11e882a74abf7afd82b"
+    },
+    {
+      "path": "frontend/src/api/chat.js",
+      "sha256": "9f1e2b5a4261435f14f8a5fcb3b430c24324ababd563743dc79a47419fd4d18c"
+    },
+    {
+      "path": "frontend/src/api/client.js",
+      "sha256": "50fb3924a519d0075a0f53b9d5359e2c664a1f824444e975da0e475d47fc3c6c"
+    },
+    {
+      "path": "frontend/src/api/companies.js",
+      "sha256": "5a183a173102426462c034c84c38e7dc4bc9fadb131ad3a140000c3c764dac55"
+    },
+    {
+      "path": "frontend/src/api/dashboard.js",
+      "sha256": "80867f88035b1b442bf4a455696f862f8d6419e83cb40d10a6581239050c3da5"
+    },
+    {
+      "path": "frontend/src/api/documents.js",
+      "sha256": "620dc82172554a4a80d304d187fe0d70527ed3071f60be47222ab1d12db20e1f"
+    },
+    {
+      "path": "frontend/src/api/hr.js",
+      "sha256": "ffeda7150b21f8db908824099dfdc63e97c1a3594e30d4c644da07e74bf8a7b2"
+    },
+    {
+      "path": "frontend/src/api/idempotency.js",
+      "sha256": "639c3ab9c21fe8c26a07b0e1369e10a591b1bb377eafc7b7990bee832609319a"
+    },
+    {
+      "path": "frontend/src/api/jobs.js",
+      "sha256": "ec1efa33955c708e6543792165424796ecad0454930aeac454700380dafba9d0"
+    },
+    {
+      "path": "frontend/src/api/processingJobs.js",
+      "sha256": "5aa21db644bb23d24cf97be4f8a919c59e5cc2475038b625fd7174912df93ea7"
+    },
+    {
+      "path": "frontend/src/api/processingJobs.test.mjs",
+      "sha256": "9e88e89efafef63ae8b393b9e6760a1a65ae8b6cd93fc3f692becdad83220851"
+    },
+    {
+      "path": "frontend/src/api/workflowCommands.test.mjs",
+      "sha256": "d6b0e203e0bf14df6b88d7064dae8d8f39bb62e96010acac015c85479af46151"
+    },
+    {
+      "path": "frontend/src/components/Alert.jsx",
+      "sha256": "500822966283129d9aff936f16d14b48a51ec1e9438a47c02c46974ee9b939df"
+    },
+    {
+      "path": "frontend/src/components/AppFooter.jsx",
+      "sha256": "ef6820321e26815e0b6f3e8e14a18b1cafef1d5553ffc6590938a6f10c66d50e"
+    },
+    {
+      "path": "frontend/src/components/AppSidebar.jsx",
+      "sha256": "10f5fb22553b81da0f9fa782d189228a2a85331c3b795433ccfd06a98d6fa963"
+    },
+    {
+      "path": "frontend/src/components/ApplicationForm.jsx",
+      "sha256": "212cdf4aa98d32e65205ed8f1275a0b3d10b4f1480b6f9a04d635ec8aa88e1dc"
+    },
+    {
+      "path": "frontend/src/components/JobPostingForm.jsx",
+      "sha256": "59c1dcb2bbcb66273d96749b1d056e33083acd22b1ddcc191854e50572f8a46e"
+    },
+    {
+      "path": "frontend/src/components/Layout.jsx",
+      "sha256": "25ae55b6b987d9c1ea0bbff12efa7c28ddabba6c1188d604cc0d43343c9c2003"
+    },
+    {
+      "path": "frontend/src/components/MobileSidebarDrawer.jsx",
+      "sha256": "6550d163ac361533c3bf4ed1789ff4beebbc56ab35aeb3274378731bf7c41543"
+    },
+    {
+      "path": "frontend/src/components/StatCard.jsx",
+      "sha256": "5724737f78a54283f2ac72d187a7bf91cced646173d28d6581504f8baed4f193"
+    },
+    {
+      "path": "frontend/src/components/StatusBadge.jsx",
+      "sha256": "0a5041ced4c26f41d1da5f403f8310f8e00cb7aac97d71c36680a955eb2a4610"
+    },
+    {
+      "path": "frontend/src/components/candidate/CandidateUI.jsx",
+      "sha256": "a40fcebe5e1357ef699b79b7cdc5594a66b826f96592fbc913522f2da3a14698"
+    },
+    {
+      "path": "frontend/src/components/home/LogoMarquee.jsx",
+      "sha256": "a6b25dfbba41df4bee963ea7623f4a278a5232baa52970e3543d9e4a9404334c"
+    },
+    {
+      "path": "frontend/src/constants.js",
+      "sha256": "dbf19e8cd5145226fa1e83dbc9334d8f90582f8e645915d61023c735d0ae6777"
+    },
+    {
+      "path": "frontend/src/context/AuthContext.jsx",
+      "sha256": "9f304443598c073cfa41e1e60bb2babc9cc374d6f2106f4f5427cf41df46d1e9"
+    },
+    {
+      "path": "frontend/src/hooks/useIdempotencyKeys.js",
+      "sha256": "91a1742cf094877f02bd0e51aa7f7afe2cf4fe77b85d26fd1189912826fb3426"
+    },
+    {
+      "path": "frontend/src/hooks/useProcessingJobStatus.js",
+      "sha256": "8b48d128bf5eca84da9761d4a114d4d5247c484217832d72b0a07ae6dc843356"
+    },
+    {
+      "path": "frontend/src/index.css",
+      "sha256": "34af13f262069e720161ae4796211399b96672bf6aec5f12f8ce72cce55b8856"
+    },
+    {
+      "path": "frontend/src/main.jsx",
+      "sha256": "4c37defef64b341f7878424b7abea353c95ca268991568e7cb774c61fab93795"
+    },
+    {
+      "path": "frontend/src/pages/AICVMatching.jsx",
+      "sha256": "22a7643e89c9be1365ba93f2a94af33eaec4a5d8e6c6ba2be4e71d93259d671f"
+    },
+    {
+      "path": "frontend/src/pages/ApplicationDetail.jsx",
+      "sha256": "80d07dbfceaa3d323bc796e17c479795144d143710426599188fb7dc0e11fa8a"
+    },
+    {
+      "path": "frontend/src/pages/ApplicationsList.jsx",
+      "sha256": "5a3aca838a6abaa8b7ad61f4a8a99aa4bb59df0e2a216b6a8cc5650c619d63dd"
+    },
+    {
+      "path": "frontend/src/pages/CandidateApply.jsx",
+      "sha256": "d2ce4e634bd304bff77e730dde4a066f484deb72bc5a2dcdfb79126adffa7725"
+    },
+    {
+      "path": "frontend/src/pages/CandidateDashboard.jsx",
+      "sha256": "85d885b98a70debdf4fbb895c7a7dbeb88812b2ebb9f121f38f9eb2cc3b51d4f"
+    },
+    {
+      "path": "frontend/src/pages/CandidateJobApplicationDetail.jsx",
+      "sha256": "d38367897c3ae54c770a64e8a5cb2a30d43f67f134e2aac8677b2ebcfb6e0ed1"
+    },
+    {
+      "path": "frontend/src/pages/CandidateJobApplications.jsx",
+      "sha256": "80e015ca7fddc32c1db32445473c589fbaa301b74d82c6691094283711063c12"
+    },
+    {
+      "path": "frontend/src/pages/CandidateJobDetail.jsx",
+      "sha256": "e2b5c4863775fdcabe31d6f7b80416de18c3cc9215fc51b79961bd8eb158581f"
+    },
+    {
+      "path": "frontend/src/pages/CandidateJobs.jsx",
+      "sha256": "0c74d2eca22134e0f180cb53ecb14561fcd6231aaad8d87d45a4b259b3df8e65"
+    },
+    {
+      "path": "frontend/src/pages/CandidateProfile.jsx",
+      "sha256": "d994c156121a675ae4691dd68105f64d71240d84becc77279bd6cef0418833ac"
+    },
+    {
+      "path": "frontend/src/pages/Chat.jsx",
+      "sha256": "bb3c3886a2ae1fba7b3984231ad053dcbc117278b9dcbc3e385d74cb2397bd5d"
+    },
+    {
+      "path": "frontend/src/pages/CreateApplication.jsx",
+      "sha256": "6caafbb8ac1ce0e83ccf94d9cfd8b489b4276981b85f2d398ea42b542d96b20d"
+    },
+    {
+      "path": "frontend/src/pages/Dashboard.jsx",
+      "sha256": "d52cee4dc6b31c5433dcf224221a195b06a5f6be40d0dcd9b531563d73316269"
+    },
+    {
+      "path": "frontend/src/pages/EditApplication.jsx",
+      "sha256": "abd609993710a1ab585c6656161890662f8e01262d55bcdcd893e9488dd6d55f"
+    },
+    {
+      "path": "frontend/src/pages/Homepage.css",
+      "sha256": "2c38182dd22e42382dc456c53ee454dcfd8a6da2d5fd02940354d657a2fccaac"
+    },
+    {
+      "path": "frontend/src/pages/Homepage.jsx",
+      "sha256": "a1318827f9020217cdb0d1012b9a6f01555b0023494e2eef24db8b7a17698139"
+    },
+    {
+      "path": "frontend/src/pages/HrApplicationDetail.jsx",
+      "sha256": "452ba7f25c171f5df4b69149b89087872cd4c1c8492480f60fc090e3a9a9839a"
+    },
+    {
+      "path": "frontend/src/pages/HrCompany.jsx",
+      "sha256": "405b56e7a1a5600a43c317c93d22c2e90d3ad4c4854e17155a12f1ec9dc494f1"
+    },
+    {
+      "path": "frontend/src/pages/HrDashboard.jsx",
+      "sha256": "d6b61eb537551e9ea6e3c86a6c53211f84519b0a5d9b441a933222845c35652c"
+    },
+    {
+      "path": "frontend/src/pages/HrJobApplicants.jsx",
+      "sha256": "9feef2a9b6698da9d32875924ef832ca3233f4884a553c2c2fe235df1e53f486"
+    },
+    {
+      "path": "frontend/src/pages/HrJobDetail.jsx",
+      "sha256": "dc9aa7d39018218917aa911a6fa0ea175d49201574c5a136dab6df94d04791c5"
+    },
+    {
+      "path": "frontend/src/pages/HrJobEditor.jsx",
+      "sha256": "bcc66fa509c3089a2bc6e3f9420fb4d220f1ead6f1eca806812fea70a63923ac"
+    },
+    {
+      "path": "frontend/src/pages/HrJobs.jsx",
+      "sha256": "a99abdf4332d28ef57b2511ff4a041eb8691e04696ea9dbf0a232c64dea260d6"
+    },
+    {
+      "path": "frontend/src/pages/Login.jsx",
+      "sha256": "ae4e412ff10a2babbfd06e272b34dce44f188e107145340d3f1df4eec8665268"
+    },
+    {
+      "path": "frontend/src/pages/Register.jsx",
+      "sha256": "587931368e963a99f7521b5c8b59c545b7b3bb9d1c53887d5fd0f66c2c2e0086"
+    },
+    {
+      "path": "frontend/src/pages/SearchResults.jsx",
+      "sha256": "fd4fe8e2822d35ebba62e3f7dbbe193036b0d254d2e049627dd3c7a264cce586"
+    },
+    {
+      "path": "frontend/src/pages/Settings.jsx",
+      "sha256": "474e5b95c12b3c5a55ce53f174fd47376f78c4e4f9890aa548ba18299cad3089"
+    },
+    {
+      "path": "frontend/src/pages/Unauthorized.jsx",
+      "sha256": "969e82454bd4d8a71ae2b1a7ee84c7931845a41a05dfc11691ed8a18bd2ca474"
+    },
+    {
+      "path": "frontend/src/routes/ProtectedRoute.jsx",
+      "sha256": "b1bdffc0b748c16c31095c75e173f286dd3775b1fcc186ff035d2330ae319022"
+    },
+    {
+      "path": "frontend/src/routes/RoleHomeRedirect.jsx",
+      "sha256": "d4906d7cf3d7df5dbe8030752b6f557ccdbaec5fbd8f0a273384eafc7a2145b0"
+    },
+    {
+      "path": "frontend/src/utils/passwordValidation.js",
+      "sha256": "c9d1625fdc0ae0158f26efb3cc7659988bf0c0f03aa15634f60ab93dde324475"
+    },
+    {
+      "path": "frontend/src/utils/passwordValidation.test.js",
+      "sha256": "208e4540764cfd369fd7fd43d57a5d2dfa6d4a2dddd607d1db6abef6abb352ca"
+    },
+    {
+      "path": "frontend/src/utils/systemApplications.js",
+      "sha256": "17cac59115a443fd8741e9802d35b974897443b94d286ec6799313cd68e7873e"
+    },
+    {
+      "path": "frontend/src/validation/forms.js",
+      "sha256": "5733f844a7ef20c59319802cec1d98275fd4bb0425664fd26c7dbd5e652e209d"
+    },
+    {
+      "path": "frontend/src/validation/forms.test.mjs",
+      "sha256": "9bc0e9ca18975518b01f7c7912b89927145a865cae44d00389e42b37834023eb"
+    },
+    {
+      "path": "frontend/tailwind.config.js",
+      "sha256": "5e088e5db3f388b0a3daa204eb48edfb48619e3ff261b3615407cd8ecc90dc1f"
+    },
+    {
+      "path": "frontend/vite.config.js",
+      "sha256": "7a5a6027f3be97ad55ae5a544cb7139dd46b4f37ce1225e92418e736c343e147"
+    },
+    {
+      "path": "Dockerfile.ai-service",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "191da958d256bfe252426e8b2ad0f6db0c5b949926b558ec613ef34f57933a8d"
+    },
+    {
+      "path": "ai_service/.env.example",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "e8ded0a2334482345d27f57436a708028ab7cd71c977409cd1525a90790b7b0b"
+    },
+    {
+      "path": "ai_service/README.md",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "2a0f3001a1cc3c00ae6d3b293bb75b4b30834b363eaf9a0d15bb873497c07a6f"
+    },
+    {
+      "path": "ai_service/__init__.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "0fffd76df42b5e2c64cb96e2d9fe4bfd3a1ac15bee413baa1514d3eb8fa9c4cd"
+    },
+    {
+      "path": "ai_service/app.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "d0df376a74e78ccb3a7270478008de195ca60fa7cab046b417546d3e37a1f8cd"
+    },
+    {
+      "path": "ai_service/cv_cleaning.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "36dd18cbd267f0a963afcf56582a830d91eeee733731510f5318eae88d480db5"
+    },
+    {
+      "path": "ai_service/cv_parser.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "dfce5f12684378fb7cb08a56bdb1b6ab57b6c5c29f90b994dc2ae1df191f76e0"
+    },
+    {
+      "path": "ai_service/cv_prompt.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "7fea3f1f26e4b6f36137ca95bab16bc86f3228a13681602b7a9a27a4e09ca4f1"
+    },
+    {
+      "path": "ai_service/cv_schemas.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "6bada01aba6a6618d85e37b230b860cc7a135febe9722cbfae03ed55bbea79c2"
+    },
+    {
+      "path": "ai_service/examples/batch_group_score_test.json",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "4972e3fa5c86134dd88113955da626509b696ca2ed7008bc1ee1491cd9dccdc2"
+    },
+    {
+      "path": "ai_service/examples/group_score_bad_test.json",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "f7f2cd8f3ba443a464de0f3b21e397e4afcc8e2f609ea467cdab7504fdcb1b7e"
+    },
+    {
+      "path": "ai_service/examples/group_score_excellent_test.json",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "e132e47250beb0058a91ed3a15b840d6d05d1d087ef01a21e9dfe90c1a441720"
+    },
+    {
+      "path": "ai_service/examples/rerank_3_level_test.json",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "9a3c66a4fb624a1b7336a7235a9cc9b0ceaa35c905d24329791e483c1b23b890"
+    },
+    {
+      "path": "ai_service/examples/rerank_keyword_stuffing_test.json",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "317bb8b8eadc87e388d5c41cd44c2fbe780aed0a3c4b9768d6c059fa13ca99fc"
+    },
+    {
+      "path": "ai_service/job_cleaning.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "81ff3bce6469a136ee8047546230063f05fda44d3eec4fe19e1cc3fc20104560"
+    },
+    {
+      "path": "ai_service/job_parser.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "353b60bc742febf8da89c2280e783a8a1a95d0428151c79773cc80f4aa1312fb"
+    },
+    {
+      "path": "ai_service/job_prompt.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "4caea61e130e6c7ffb49d51db177b071d8d31d8f61581fb2c6f81de2772d0a9b"
+    },
+    {
+      "path": "ai_service/job_schemas.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "1af37bf2fc401c60f1098eafd54f49ba15bb5da2330c85a7e2a48f248acb708e"
+    },
+    {
+      "path": "ai_service/llm/__init__.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "c3a4fcf737afdc579442f28cc4af7d37674e887c5ff12c5a1e175e0f77b8ab65"
+    },
+    {
+      "path": "ai_service/llm/qwen_client.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "7bbf3ccffa720c3fbae0b142e179d23376e77d5afff7b916ee156b6525ce4a30"
+    },
+    {
+      "path": "ai_service/qwen_reranker.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "4de9f572c1cfaa593327824632607fb3b207a54f7be97dd9f40ce497c7d7065a"
+    },
+    {
+      "path": "ai_service/schemas.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "0c2351c5a71d32b4f6e91303ab86651dfe8214e84a299c3125c65c8887bcdd79"
+    },
+    {
+      "path": "ai_service/scoring.py",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "0335302b7f3aa0a8fe6168c3ee817634a8f720f72f92f967c82d74614fba5ffc"
+    },
+    {
+      "path": "requirements-qwen.txt",
+      "revision": "c19cde047ff3473146e7d8cc375d7ad04d544295",
+      "sha256": "6306de0dfc42d95afd65694344ff580ebb0480806b22dd30bdaeb13afc132b29"
+    }
+  ]
+}
